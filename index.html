@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NANAYA Pharmacy - บริการสุขภาพออนไลน์</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Prompt', 'sans-serif'] },
+                    colors: { pharmacy: '#059669', sky: '#0ea5e9' }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #f0fdf4; }
+        .menu-card { transition: all 0.3s ease; cursor: pointer; }
+        .menu-card:hover { transform: translateY(-5px); box-shadow: 0 12px 25px rgba(5, 150, 105, 0.15); }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-4">
+
+    <div class="max-w-2xl w-full">
+        <div class="text-center mb-10">
+            <div class="inline-block p-5 bg-white rounded-full shadow-lg mb-4 ring-4 ring-green-50">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-14 w-14 text-pharmacy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"></path>
+                    <path d="m8.5 8.5 7 7"></path>
+                </svg>
+            </div>
+            <h1 class="text-4xl font-bold text-gray-800 tracking-tight">NANAYA <span class="text-pharmacy">Pharmacy</span></h1>
+            <p class="text-gray-600 mt-2 text-lg font-medium">ระบบประเมินและวิเคราะห์สุขภาพเบื้องต้น</p>
+        </div>
+
+        <div class="grid grid-cols-1 gap-5">
+            
+            <a href="calculator.html" class="menu-card bg-white p-6 rounded-3xl shadow-sm border-2 border-transparent hover:border-pharmacy flex items-center gap-5 group">
+                <div class="bg-green-50 p-3 rounded-2xl group-hover:bg-green-100 transition-colors flex items-center justify-center">
+                    <img src="protein-icon.png" alt="คำนวณโปรตีน" class="w-12 h-12 object-contain drop-shadow-sm">
+                </div>
+                <div class="flex-1">
+                    <h2 class="text-xl font-bold text-gray-800">1. คำนวณโปรตีนและแคลอรี่</h2>
+                    <p class="text-gray-500 text-sm">ประเมินพลังงานตามหลักเกณฑ์ล่าสุด 2025</p>
+                </div>
+                <div class="text-gray-300 group-hover:text-pharmacy text-2xl font-bold">→</div>
+            </a>
+
+            <div class="menu-card bg-white p-6 rounded-3xl shadow-sm border-2 border-transparent flex items-center gap-5 opacity-70 border-dashed border-gray-200">
+                <div class="bg-red-50 p-3 rounded-2xl flex items-center justify-center">
+                    <img src="bp-icon.png" alt="แปรผลความดัน" class="w-12 h-12 object-contain drop-shadow-sm">
+                </div>
+                <div class="flex-1">
+                    <h2 class="text-xl font-bold text-gray-400">2. แปรผลความดันโลหิต</h2>
+                    <p class="text-gray-400 text-sm">เร็วๆ นี้</p>
+                </div>
+            </div>
+
+            <div class="menu-card bg-white p-6 rounded-3xl shadow-sm border-2 border-transparent flex items-center gap-5 opacity-70 border-dashed border-gray-200">
+                <div class="bg-sky-50 p-3 rounded-2xl flex items-center justify-center">
+                    <img src="diabetes-icon.png" alt="แปรผลเบาหวาน" class="w-12 h-12 object-contain drop-shadow-sm">
+                </div>
+                <div class="flex-1">
+                    <h2 class="text-xl font-bold text-gray-400">3. แปรผลเลือดโรคเบาหวาน</h2>
+                    <p class="text-gray-400 text-sm">เร็วๆ นี้</p>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="text-center mt-12">
+            <p class="text-gray-400 text-sm italic">"ดูแลคุณด้วยความใส่ใจ โดย NANAYA Pharmacy"</p>
+        </div>
+    </div>
+</body>
+</html>
