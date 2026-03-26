@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>เครื่องคำนวณแคลอรี่และโปรตีนต่อวัน</title>
+    <title>เครื่องคำนวณแคลอรี่ โปรตีน และอาหารเสริม</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -43,14 +43,26 @@
             border-radius: 0.25rem;
         }
         #result-section { display: none; }
-        #food-view { display: none; }
         
+        /* สไตล์สำหรับแท็บ */
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .tab-btn {
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+        .tab-btn.active {
+            border-bottom-color: #2563eb;
+            color: #2563eb;
+            font-weight: 600;
+            background-color: #eff6ff;
+        }
+
         /* สไตล์สำหรับตอนกดพิมพ์ (Print) */
         @media print {
             body * { visibility: hidden; }
-            #calculator-view, #food-view { visibility: visible; }
-            .print-area, .print-area * { visibility: visible; }
-            .print-area { position: absolute; left: 0; top: 0; width: 100%; border: none; background: white; padding: 0;}
+            .tab-content.active, .tab-content.active * { visibility: visible; }
+            .tab-content.active { position: absolute; left: 0; top: 0; width: 100%; border: none; background: white; padding: 0;}
             .no-print { display: none !important; }
             .print-border { border: 1px solid #e5e7eb !important; break-inside: avoid; }
         }
@@ -58,296 +70,735 @@
 </head>
 <body class="p-2 md:p-4 flex justify-center items-start min-h-screen">
 
-    <div id="calculator-view" class="max-w-4xl w-full bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200">
+    <div class="max-w-5xl w-full bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200">
         
         <div class="bg-primary p-4 md:p-5 text-white no-print relative">
-            <div class="flex justify-center md:justify-start mb-3 md:mb-0 md:absolute md:top-5 md:left-5">
-                <a href="index.html" class="flex items-center gap-1.5 bg-white/20 hover:bg-white/30 text-white px-3 py-1.5 rounded-lg text-sm font-medium transition backdrop-blur-sm border border-white/10 shadow-sm">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                    </svg>
-                    กลับหน้าหลัก Nanaya Pharmacy
-                </a>
-            </div>
-
-            <div class="text-center mt-1 md:mt-0">
-                <h1 class="text-xl md:text-2xl font-bold mb-1">เครื่องคำนวณแคลอรี่และโปรตีนต่อวัน</h1>
-                <p class="text-sm md:text-base opacity-90">ประเมินพลังงานและสารอาหารที่เหมาะสมสำหรับคุณ</p>
+            <div class="text-center">
+                <h1 class="text-xl md:text-2xl font-bold mb-1">โปรแกรมคำนวณโภชนาการ</h1>
+                <p class="text-sm md:text-base opacity-90">ประเมินพลังงาน โปรตีน และคำนวณอาหารเสริมทางการแพทย์</p>
             </div>
         </div>
 
-        <div class="p-5 md:p-8 space-y-6 no-print">
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <div>
-                    <label class="block font-semibold mb-2 text-dark text-[17px]" for="gender">เพศ</label>
-                    <select id="gender" class="w-full bg-bglight border border-gray-300 rounded-xl p-3 focus:border-primary focus:ring-1 focus:ring-primary outline-none text-[17px] cursor-pointer transition">
-                        <option value="male">ชาย</option>
-                        <option value="female">หญิง</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label class="block font-semibold mb-2 text-dark text-[17px]" for="age">อายุ (ปี)</label>
-                    <input type="number" id="age" min="2" class="w-full bg-bglight border border-gray-300 rounded-xl p-3 focus:border-primary focus:ring-1 focus:ring-primary outline-none text-[17px] transition" placeholder="ระบุอายุของคุณ">
-                </div>
-
-                <div>
-                    <label class="block font-semibold mb-2 text-dark text-[17px]" for="weight">น้ำหนักตัว (กิโลกรัม)</label>
-                    <input type="number" id="weight" min="10" step="0.1" class="w-full bg-bglight border border-gray-300 rounded-xl p-3 focus:border-primary focus:ring-1 focus:ring-primary outline-none text-[17px] transition" placeholder="เช่น 60">
-                </div>
-
-                <div>
-                    <label class="block font-semibold mb-2 text-dark text-[17px]" for="height">ส่วนสูง (เซนติเมตร)</label>
-                    <input type="number" id="height" min="50" step="0.1" class="w-full bg-bglight border border-gray-300 rounded-xl p-3 focus:border-primary focus:ring-1 focus:ring-primary outline-none text-[17px] transition" placeholder="เช่น 165">
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-5 border-t border-gray-200 pt-5">
-                <div>
-                    <label class="block font-semibold mb-2 text-dark text-[17px]" for="activity">ระดับการทำกิจกรรม</label>
-                    <select id="activity" class="w-full bg-bglight border border-gray-300 rounded-xl p-3 focus:border-primary focus:ring-1 focus:ring-primary outline-none text-[17px] cursor-pointer transition">
-                        <option value="1.2">นั่งทำงานเป็นหลัก ไม่ออกกำลังกาย</option>
-                        <option value="1.375">ขยับตัวบ้าง / ออกกำลังกายเบาๆ (1-3 วัน/สัปดาห์)</option>
-                        <option value="1.55">ออกกำลังกายปานกลาง (3-5 วัน/สัปดาห์)</option>
-                        <option value="1.725">ออกกำลังกายหนัก หรือใช้แรง (6-7 วัน/สัปดาห์)</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label class="block font-semibold mb-2 text-dark text-[17px]" for="goal">เป้าหมายน้ำหนัก</label>
-                    <select id="goal" class="w-full bg-blue-50 border border-blue-300 rounded-xl p-3 focus:border-primary focus:ring-1 focus:ring-primary outline-none text-[17px] cursor-pointer transition font-medium text-blue-800">
-                        <option value="0">⚖️ รักษาน้ำหนัก</option>
-                        <option value="-500">📉 ลดน้ำหนัก (หัก 500 kcal)</option>
-                        <option value="500">📈 เพิ่มน้ำหนัก/กล้ามเนื้อ (เพิ่ม 500 kcal)</option>
-                    </select>
-                </div>
-            </div>
-
-            <hr class="border-gray-200">
-
-            <div>
-                <label class="block font-semibold mb-3 text-[17px] text-dark">สภาวะสุขภาพและโรคร่วม (เลือกได้มากกว่า 1 ข้อ)</label>
-                <div class="space-y-3 bg-bglight p-4 rounded-xl border border-gray-200">
-                    
-                    <label class="flex items-start cursor-pointer hover:bg-gray-100 p-2 rounded-lg transition duration-200">
-                        <input type="checkbox" id="chk_none" class="mt-0.5 flex-shrink-0" onchange="toggleNone()" checked>
-                        <span class="ml-3 text-[17px] text-gray-700 font-medium text-primary">ไม่มีโรคร่วม / สุขภาพแข็งแรง</span>
-                    </label>
-
-                    <hr class="border-gray-200 my-2">
-
-                    <label class="flex items-start cursor-pointer hover:bg-gray-100 p-2 rounded-lg transition duration-200">
-                        <input type="checkbox" id="chk_pregnant" class="mt-0.5 flex-shrink-0" onchange="uncheckNone()">
-                        <span class="ml-3 text-[17px] text-gray-700">ตั้งครรภ์</span>
-                    </label>
-                    
-                    <label class="flex items-start cursor-pointer hover:bg-gray-100 p-2 rounded-lg transition duration-200">
-                        <input type="checkbox" id="chk_breastfeeding" class="mt-0.5 flex-shrink-0" onchange="uncheckNone()">
-                        <span class="ml-3 text-[17px] text-gray-700">ให้นมบุตร</span>
-                    </label>
-
-                    <label class="flex items-start cursor-pointer hover:bg-gray-100 p-2 rounded-lg transition duration-200">
-                        <input type="checkbox" id="chk_diabetes" class="mt-0.5 flex-shrink-0" onchange="uncheckNone()">
-                        <span class="ml-3 text-[17px] text-gray-700">ผู้ป่วยเบาหวาน มีความเสี่ยงน้ำตาลสูง/ต่ำ (Diabetes Hyper/Hypo risk)</span>
-                    </label>
-
-                    <label class="flex items-start cursor-pointer hover:bg-gray-100 p-2 rounded-lg transition duration-200">
-                        <input type="checkbox" id="chk_dkd_non" class="mt-0.5 flex-shrink-0" onchange="toggleKidney('non')">
-                        <span class="ml-3 text-[17px] text-gray-700">ผู้ป่วยโรคไต - <span class="text-orange-600 font-medium">ยังไม่ฟอกไต</span> (DKD Non-dialysis)</span>
-                    </label>
-
-                    <label class="flex items-start cursor-pointer hover:bg-gray-100 p-2 rounded-lg transition duration-200">
-                        <input type="checkbox" id="chk_dkd_dialysis" class="mt-0.5 flex-shrink-0" onchange="toggleKidney('dialysis')">
-                        <span class="ml-3 text-[17px] text-gray-700">ผู้ป่วยโรคไต - <span class="text-red-600 font-medium">ฟอกไตแล้ว</span> (DKD Dialysis)</span>
-                    </label>
-
-                </div>
-            </div>
-
-            <div class="flex flex-col sm:flex-row gap-3 mt-4">
-                <button onclick="calculate()" class="flex-1 bg-primary hover:bg-blue-700 text-white font-bold py-4 rounded-xl text-[18px] shadow-md hover:shadow-lg transition duration-200">
-                    คำนวณผลลัพธ์
-                </button>
-                <button onclick="resetForm()" class="sm:w-1/3 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-4 rounded-xl text-[18px] shadow-sm hover:shadow-md transition duration-200">
-                    ล้างข้อมูล
-                </button>
-            </div>
-        </div>
-
-        <div id="result-section" class="bg-blue-50 p-6 md:p-8 border-t-4 border-primary print-area">
-            <div class="text-center mb-6">
-                <h2 class="text-2xl font-bold text-gray-800">ผลการประเมินของคุณ</h2>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5 text-center print-border">
-                    <p class="text-[17px] text-gray-600 font-medium mb-1">ดัชนีมวลกาย (BMI)</p>
-                    <div class="font-bold">
-                        <span id="res-bmi-value" class="text-3xl text-gray-800">0.0</span>
-                    </div>
-                    <div id="res-bmi-text" class="text-[16px] font-medium mt-1"></div>
-                </div>
-
-                <div class="bg-white rounded-xl shadow-sm border border-orange-200 p-5 text-center print-border">
-                    <p class="text-[17px] text-gray-600 font-medium mb-1">พลังงานเป้าหมาย</p>
-                    <div class="text-orange-500 font-bold">
-                        <span id="res-calories" class="text-3xl md:text-4xl">0</span>
-                        <span class="text-[16px] ml-1 text-gray-600 font-normal block sm:inline">kcal/วัน</span>
-                    </div>
-                </div>
-
-                <div class="bg-white rounded-xl shadow-sm border border-green-200 p-5 text-center print-border">
-                    <p class="text-[17px] text-gray-600 font-medium mb-1">🥩 โปรตีน</p>
-                    <div class="text-secondary font-bold mb-1">
-                        <span id="res-protein" class="text-3xl md:text-4xl">0 - 0</span>
-                        <span class="text-[16px] ml-1 text-gray-600 font-normal block sm:inline">กรัม/วัน</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="mb-6 flex justify-center no-print">
-                <button onclick="openFoodPage()" class="w-full md:w-auto bg-blue-100 hover:bg-blue-200 text-primary border border-blue-300 px-6 py-4 rounded-xl font-bold text-[17px] shadow-sm flex items-center justify-center gap-2 transition duration-200">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
-                    </svg>
-                    ดูตารางเทียบปริมาณเนื้อสัตว์/อาหารจริง
-                </button>
-            </div>
-
-            <div class="bg-white p-5 rounded-xl border border-gray-300 shadow-sm mb-6 text-gray-800 text-[14px] leading-relaxed print-border">
-                <p class="font-bold text-[16px] border-b pb-2 mb-3">แหล่งอ้างอิงการคำนวณโปรตีนของคุณ</p>
-                <div id="res-protein-detail" class="space-y-2"></div>
-            </div>
-
-            <div class="bg-gray-100 p-4 rounded-lg text-[13px] text-gray-600 border border-gray-200 text-center print-border">
-                <p class="font-semibold">* ข้อมูลนี้เพื่อการส่งเสริมสุขภาพเบื้องต้น หากมีโรคประจำตัวซับซ้อนโปรดปรึกษาแพทย์หรือนักกำหนดอาหาร</p>
-            </div>
-
-            <div class="mt-6 flex justify-center no-print">
-                <button onclick="window.print()" class="bg-dark hover:bg-black text-white px-6 py-3 rounded-xl shadow-md font-semibold flex items-center gap-2 transition">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
-                    </svg>
-                    พิมพ์ / บันทึกเป็น PDF
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <div id="food-view" class="max-w-4xl w-full bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200 print-area">
-        <div class="bg-secondary p-5 text-white flex items-center justify-between no-print">
-            <h2 class="text-xl md:text-2xl font-bold">ตารางเทียบปริมาณโปรตีน</h2>
-            <button onclick="closeFoodPage()" class="bg-white text-secondary hover:bg-gray-100 px-4 py-2 rounded-lg font-bold text-sm shadow transition">
-                ← ย้อนกลับ
+        <div class="flex flex-col sm:flex-row border-b border-gray-200 bg-gray-50 no-print text-[15px] md:text-[16px]">
+            <button onclick="switchTab('tab-1', this)" class="tab-btn active flex-1 py-4 px-2 text-center text-gray-600 hover:bg-gray-100 font-medium">
+                1. คำนวณโปรตีนที่ต้องการต่อวัน
+            </button>
+            <button onclick="switchTab('tab-2', this)" class="tab-btn flex-1 py-4 px-2 text-center text-gray-600 hover:bg-gray-100 font-medium border-l sm:border-l-0 sm:border-l border-gray-200">
+                2. เมนูโปรตีน
+            </button>
+            <button onclick="switchTab('tab-3', this)" class="tab-btn flex-1 py-4 px-2 text-center text-gray-600 hover:bg-gray-100 font-medium border-l sm:border-l-0 sm:border-l border-gray-200">
+                3. คำนวณอาหารเสริมทางการแพทย์
             </button>
         </div>
-        
-        <div class="hidden print:block text-center mt-6 mb-4">
-             <h2 class="text-2xl font-bold text-gray-800">ตารางเทียบปริมาณโปรตีน (ประมาณ 20 กรัม)</h2>
-        </div>
 
-        <div class="p-5 md:p-8">
-            <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-6 text-gray-800 text-[15px]">
-                <p>💡 <strong>ทริคกะปริมาณ:</strong> อาหารในตารางด้านล่างนี้ ให้ปริมาณโปรตีนเทียบเท่ากับ <span class="bg-blue-200 px-2 py-0.5 rounded font-bold text-primary">20 กรัม</span> เพื่อให้คุณนำไปจัดมื้ออาหารตามผลลัพธ์โปรตีนต่อวันของคุณได้ง่ายขึ้น (น้ำหนักในตารางคือ **น้ำหนักของอาหารที่ปรุงสุกแล้ว**)</p>
+        <div id="tab-1" class="tab-content active">
+            <div class="p-5 md:p-8 space-y-6 no-print">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div>
+                        <label class="block font-semibold mb-2 text-dark text-[17px]" for="gender">เพศ</label>
+                        <select id="gender" class="w-full bg-bglight border border-gray-300 rounded-xl p-3 focus:border-primary focus:ring-1 focus:ring-primary outline-none text-[17px] cursor-pointer transition">
+                            <option value="male">ชาย</option>
+                            <option value="female">หญิง</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block font-semibold mb-2 text-dark text-[17px]" for="age">อายุ (ปี)</label>
+                        <input type="number" id="age" min="2" class="w-full bg-bglight border border-gray-300 rounded-xl p-3 focus:border-primary focus:ring-1 focus:ring-primary outline-none text-[17px] transition" placeholder="ระบุอายุของคุณ">
+                    </div>
+
+                    <div>
+                        <label class="block font-semibold mb-2 text-dark text-[17px]" for="weight">น้ำหนักตัว (กิโลกรัม)</label>
+                        <input type="number" id="weight" min="10" step="0.1" class="w-full bg-bglight border border-gray-300 rounded-xl p-3 focus:border-primary focus:ring-1 focus:ring-primary outline-none text-[17px] transition" placeholder="เช่น 60">
+                    </div>
+
+                    <div>
+                        <label class="block font-semibold mb-2 text-dark text-[17px]" for="height">ส่วนสูง (เซนติเมตร)</label>
+                        <input type="number" id="height" min="50" step="0.1" class="w-full bg-bglight border border-gray-300 rounded-xl p-3 focus:border-primary focus:ring-1 focus:ring-primary outline-none text-[17px] transition" placeholder="เช่น 165">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5 border-t border-gray-200 pt-5">
+                    <div>
+                        <label class="block font-semibold mb-2 text-dark text-[17px]" for="activity">ระดับการทำกิจกรรม</label>
+                        <select id="activity" class="w-full bg-bglight border border-gray-300 rounded-xl p-3 focus:border-primary focus:ring-1 focus:ring-primary outline-none text-[17px] cursor-pointer transition">
+                            <option value="1.2">นั่งทำงานเป็นหลัก ไม่ออกกำลังกาย</option>
+                            <option value="1.375">ขยับตัวบ้าง / ออกกำลังกายเบาๆ (1-3 วัน/สัปดาห์)</option>
+                            <option value="1.55">ออกกำลังกายปานกลาง (3-5 วัน/สัปดาห์)</option>
+                            <option value="1.725">ออกกำลังกายหนัก หรือใช้แรง (6-7 วัน/สัปดาห์)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block font-semibold mb-2 text-dark text-[17px]" for="goal">เป้าหมายน้ำหนัก</label>
+                        <select id="goal" class="w-full bg-blue-50 border border-blue-300 rounded-xl p-3 focus:border-primary focus:ring-1 focus:ring-primary outline-none text-[17px] cursor-pointer transition font-medium text-blue-800">
+                            <option value="0">⚖️ รักษาน้ำหนัก</option>
+                            <option value="-500">📉 ลดน้ำหนัก (หัก 500 kcal)</option>
+                            <option value="500">📈 เพิ่มน้ำหนัก/กล้ามเนื้อ (เพิ่ม 500 kcal)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <hr class="border-gray-200">
+
+                <div>
+                    <label class="block font-semibold mb-3 text-[17px] text-dark">สภาวะสุขภาพและโรคร่วม (เลือกได้มากกว่า 1 ข้อ)</label>
+                    <div class="space-y-3 bg-bglight p-4 rounded-xl border border-gray-200">
+                        <label class="flex items-start cursor-pointer hover:bg-gray-100 p-2 rounded-lg transition duration-200">
+                            <input type="checkbox" id="chk_none" class="mt-0.5 flex-shrink-0" onchange="toggleNone()" checked>
+                            <span class="ml-3 text-[17px] text-gray-700 font-medium text-primary">ไม่มีโรคร่วม / สุขภาพแข็งแรง</span>
+                        </label>
+                        <hr class="border-gray-200 my-2">
+                        <label class="flex items-start cursor-pointer hover:bg-gray-100 p-2 rounded-lg transition duration-200">
+                            <input type="checkbox" id="chk_pregnant" class="mt-0.5 flex-shrink-0" onchange="uncheckNone()">
+                            <span class="ml-3 text-[17px] text-gray-700">ตั้งครรภ์</span>
+                        </label>
+                        <label class="flex items-start cursor-pointer hover:bg-gray-100 p-2 rounded-lg transition duration-200">
+                            <input type="checkbox" id="chk_breastfeeding" class="mt-0.5 flex-shrink-0" onchange="uncheckNone()">
+                            <span class="ml-3 text-[17px] text-gray-700">ให้นมบุตร</span>
+                        </label>
+                        <label class="flex items-start cursor-pointer hover:bg-gray-100 p-2 rounded-lg transition duration-200">
+                            <input type="checkbox" id="chk_diabetes" class="mt-0.5 flex-shrink-0" onchange="uncheckNone()">
+                            <span class="ml-3 text-[17px] text-gray-700">ผู้ป่วยเบาหวาน มีความเสี่ยงน้ำตาลสูง/ต่ำ (Diabetes Hyper/Hypo risk)</span>
+                        </label>
+                        <label class="flex items-start cursor-pointer hover:bg-gray-100 p-2 rounded-lg transition duration-200">
+                            <input type="checkbox" id="chk_dkd_non" class="mt-0.5 flex-shrink-0" onchange="toggleKidney('non')">
+                            <span class="ml-3 text-[17px] text-gray-700">ผู้ป่วยโรคไต - <span class="text-orange-600 font-medium">ยังไม่ฟอกไต</span> (DKD Non-dialysis)</span>
+                        </label>
+                        <label class="flex items-start cursor-pointer hover:bg-gray-100 p-2 rounded-lg transition duration-200">
+                            <input type="checkbox" id="chk_dkd_dialysis" class="mt-0.5 flex-shrink-0" onchange="toggleKidney('dialysis')">
+                            <span class="ml-3 text-[17px] text-gray-700">ผู้ป่วยโรคไต - <span class="text-red-600 font-medium">ฟอกไตแล้ว</span> (DKD Dialysis)</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-3 mt-4">
+                    <button onclick="calculate()" class="flex-1 bg-primary hover:bg-blue-700 text-white font-bold py-4 rounded-xl text-[18px] shadow-md hover:shadow-lg transition duration-200">
+                        คำนวณผลลัพธ์
+                    </button>
+                    <button onclick="resetForm()" class="sm:w-1/3 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-4 rounded-xl text-[18px] shadow-sm hover:shadow-md transition duration-200">
+                        ล้างข้อมูล
+                    </button>
+                </div>
             </div>
 
-            <div class="overflow-x-auto rounded-xl border border-gray-200 shadow-sm">
-                <table class="w-full text-left border-collapse min-w-[600px]">
-                    <thead>
-                        <tr class="bg-gray-100 text-gray-700 text-[16px]">
-                            <th class="p-4 border-b">หมวดหมู่</th>
-                            <th class="p-4 border-b">ชนิดอาหาร</th>
-                            <th class="p-4 border-b text-center">ปริมาณน้ำหนักเนื้อ (เพื่อให้ได้โปรตีน 20g)</th>
-                            <th class="p-4 border-b">ข้อควรระวัง / ทริคเพิ่มเติม</th>
-                        </tr>
-                    </thead>
-                    <tbody class="text-[15px] text-gray-800">
-                        <tr class="hover:bg-gray-50 border-b">
-                            <td class="p-4 font-semibold text-secondary">เนื้อสัตว์</td>
-                            <td class="p-4">อกไก่ / สันในไก่ (สุก)</td>
-                            <td class="p-4 text-center font-bold text-[17px] text-primary">70 กรัม<br><span class="text-[13px] font-normal text-gray-500">(ประมาณ 4-5 ช้อนกินข้าว)</span></td>
-                            <td class="p-4 text-gray-600">โปรตีนสูง ไขมันต่ำมาก ลีนที่สุด</td>
-                        </tr>
-                        <tr class="hover:bg-gray-50 border-b">
-                            <td class="p-4 font-semibold text-secondary">เนื้อสัตว์</td>
-                            <td class="p-4">เนื้อหมู (เนื้อแดง/ไม่ติดมัน สุก)</td>
-                            <td class="p-4 text-center font-bold text-[17px] text-primary">80 กรัม<br><span class="text-[13px] font-normal text-gray-500">(ประมาณ 5-6 ช้อนกินข้าว)</span></td>
-                            <td class="p-4 text-gray-600">ควรหลีกเลี่ยงหมูสามชั้นหรือคอหมู</td>
-                        </tr>
-                        <tr class="hover:bg-gray-50 border-b">
-                            <td class="p-4 font-semibold text-secondary">เนื้อสัตว์</td>
-                            <td class="p-4">เนื้อปลา (เช่น ปลานิล/ปลาทับทิม สุก)</td>
-                            <td class="p-4 text-center font-bold text-[17px] text-primary">90 - 100 กรัม<br><span class="text-[13px] font-normal text-gray-500">(ประมาณครึ่งตัวขนาดกลาง)</span></td>
-                            <td class="p-4 text-gray-600">ย่อยง่าย มีไขมันดี เหมาะกับทุกวัย</td>
-                        </tr>
-                        <tr class="hover:bg-gray-50 border-b">
-                            <td class="p-4 font-semibold text-secondary">เนื้อสัตว์</td>
-                            <td class="p-4">กุ้ง (เนื้อกุ้งล้วน สุก)</td>
-                            <td class="p-4 text-center font-bold text-[17px] text-primary">90 - 100 กรัม<br><span class="text-[13px] font-normal text-gray-500">(ประมาณ 8-10 ตัวขนาดกลาง)</span></td>
-                            <td class="p-4 text-gray-600">หากคุมคอเลสเตอรอล ควรเลี่ยงส่วนหัวและมันกุ้ง</td>
-                        </tr>
+            <div id="result-section" class="bg-blue-50 p-6 md:p-8 border-t-4 border-primary print-area">
+                <div class="text-center mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800">ผลการประเมินของคุณ</h2>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5 text-center print-border">
+                        <p class="text-[17px] text-gray-600 font-medium mb-1">ดัชนีมวลกาย (BMI)</p>
+                        <div class="font-bold">
+                            <span id="res-bmi-value" class="text-3xl text-gray-800">0.0</span>
+                        </div>
+                        <div id="res-bmi-text" class="text-[16px] font-medium mt-1"></div>
+                    </div>
+
+                    <div class="bg-white rounded-xl shadow-sm border border-orange-200 p-5 text-center print-border">
+                        <p class="text-[17px] text-gray-600 font-medium mb-1">พลังงานเป้าหมาย</p>
+                        <div class="text-orange-500 font-bold">
+                            <span id="res-calories" class="text-3xl md:text-4xl">0</span>
+                            <span class="text-[16px] ml-1 text-gray-600 font-normal block sm:inline">kcal/วัน</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl shadow-sm border border-green-200 p-5 text-center print-border">
+                        <p class="text-[17px] text-gray-600 font-medium mb-1">🥩 โปรตีน</p>
+                        <div class="text-secondary font-bold mb-1">
+                            <span id="res-protein" class="text-3xl md:text-4xl">0 - 0</span>
+                            <span class="text-[16px] ml-1 text-gray-600 font-normal block sm:inline">กรัม/วัน</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl border border-gray-300 shadow-sm mb-6 text-gray-800 text-[14px] leading-relaxed print-border">
+                    <p class="font-bold text-[16px] border-b pb-2 mb-3">แหล่งอ้างอิงการคำนวณโปรตีนของคุณ</p>
+                    <div id="res-protein-detail" class="space-y-2"></div>
+                </div>
+
+                <div class="bg-gray-100 p-4 rounded-lg text-[13px] text-gray-600 border border-gray-200 text-center print-border">
+                    <p class="font-semibold">* ข้อมูลนี้เพื่อการส่งเสริมสุขภาพเบื้องต้น หากมีโรคประจำตัวซับซ้อนโปรดปรึกษาแพทย์หรือนักกำหนดอาหาร</p>
+                </div>
+
+                <div class="mt-6 flex justify-center no-print">
+                    <button onclick="window.print()" class="bg-dark hover:bg-black text-white px-6 py-3 rounded-xl shadow-md font-semibold flex items-center gap-2 transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                        </svg>
+                        พิมพ์ผลลัพธ์
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab-2" class="tab-content">
+            <div class="p-5 md:p-8 space-y-8">
+                
+                <div>
+                    <h2 class="text-xl font-bold text-gray-800 mb-4 border-l-4 border-gray-400 pl-3">ตารางอ้างอิง: ปริมาณเพื่อให้ได้โปรตีน ~20 กรัม</h2>
+
+                    <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-4 text-gray-800 text-[15px]">
+                        <p>💡 <strong>ทริคกะปริมาณ:</strong> อาหารในตารางด้านล่างนี้ ให้ปริมาณโปรตีนเทียบเท่ากับ <span class="bg-blue-200 px-2 py-0.5 rounded font-bold text-primary">20 กรัม</span> เพื่อให้คุณนำไปกะปริมาณด้วยสายตาได้ง่ายขึ้น (น้ำหนักคืออาหารที่ปรุงสุกแล้ว)</p>
+                    </div>
+
+                    <div class="overflow-x-auto rounded-xl border border-gray-200 shadow-sm">
+                        <table class="w-full text-left border-collapse min-w-[600px]">
+                            <thead>
+                                <tr class="bg-gray-100 text-gray-700 text-[16px]">
+                                    <th class="p-4 border-b">หมวดหมู่</th>
+                                    <th class="p-4 border-b">ชนิดอาหาร</th>
+                                    <th class="p-4 border-b text-center">ปริมาณน้ำหนักเนื้อ (เพื่อให้ได้โปรตีน 20g)</th>
+                                    <th class="p-4 border-b">ข้อควรระวัง / ทริคเพิ่มเติม</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-[15px] text-gray-800">
+                                <tr class="hover:bg-gray-50 border-b">
+                                    <td class="p-4 font-semibold text-secondary">เนื้อสัตว์</td>
+                                    <td class="p-4">อกไก่ / สันในไก่ (สุก)</td>
+                                    <td class="p-4 text-center font-bold text-[17px] text-primary">70 กรัม<br><span class="text-[13px] font-normal text-gray-500">(ประมาณ 4-5 ช้อนกินข้าว)</span></td>
+                                    <td class="p-4 text-gray-600">โปรตีนสูง ไขมันต่ำมาก ลีนที่สุด</td>
+                                </tr>
+                                <tr class="hover:bg-gray-50 border-b">
+                                    <td class="p-4 font-semibold text-secondary">เนื้อสัตว์</td>
+                                    <td class="p-4">เนื้อหมู (เนื้อแดง/ไม่ติดมัน สุก)</td>
+                                    <td class="p-4 text-center font-bold text-[17px] text-primary">80 กรัม<br><span class="text-[13px] font-normal text-gray-500">(ประมาณ 5-6 ช้อนกินข้าว)</span></td>
+                                    <td class="p-4 text-gray-600">ควรหลีกเลี่ยงหมูสามชั้นหรือคอหมู</td>
+                                </tr>
+                                <tr class="hover:bg-gray-50 border-b">
+                                    <td class="p-4 font-semibold text-secondary">เนื้อสัตว์</td>
+                                    <td class="p-4">เนื้อปลา (เช่น ปลานิล/ปลาทับทิม สุก)</td>
+                                    <td class="p-4 text-center font-bold text-[17px] text-primary">90 - 100 กรัม<br><span class="text-[13px] font-normal text-gray-500">(ประมาณครึ่งตัวขนาดกลาง)</span></td>
+                                    <td class="p-4 text-gray-600">ย่อยง่าย มีไขมันดี เหมาะกับทุกวัย</td>
+                                </tr>
+                                <tr class="hover:bg-gray-50 border-b">
+                                    <td class="p-4 font-semibold text-secondary">เนื้อสัตว์</td>
+                                    <td class="p-4">กุ้ง (เนื้อกุ้งล้วน สุก)</td>
+                                    <td class="p-4 text-center font-bold text-[17px] text-primary">90 - 100 กรัม<br><span class="text-[13px] font-normal text-gray-500">(ประมาณ 8-10 ตัวขนาดกลาง)</span></td>
+                                    <td class="p-4 text-gray-600">หากคุมคอเลสเตอรอล ควรเลี่ยงส่วนหัวและมันกุ้ง</td>
+                                </tr>
+                                <tr class="hover:bg-gray-50 border-b">
+                                    <td class="p-4 font-semibold text-amber-600">ไข่</td>
+                                    <td class="p-4">ไข่ไก่ (เบอร์ 2-3)</td>
+                                    <td class="p-4 text-center font-bold text-[17px] text-primary">3 ฟอง</td>
+                                    <td class="p-4 text-gray-600">หากต้องการลดไขมัน/คอเลสเตอรอล ให้ใช้ <span class="font-semibold">ไข่ขาว 5-6 ฟอง</span> แทน</td>
+                                </tr>
+                                <tr class="hover:bg-gray-50 border-b">
+                                    <td class="p-4 font-semibold text-orange-700">เต้าหู้</td>
+                                    <td class="p-4">เต้าหู้ไข่ / เต้าหู้หลอดถั่วเหลือง</td>
+                                    <td class="p-4 text-center font-bold text-[17px] text-primary">1.5 - 2 หลอด</td>
+                                    <td class="p-4 text-gray-600">ตรวจสอบโซเดียมในฉลากเพิ่มเติม</td>
+                                </tr>
+                                <tr class="hover:bg-gray-50 border-b">
+                                    <td class="p-4 font-semibold text-orange-700">เต้าหู้</td>
+                                    <td class="p-4">เต้าหู้แข็ง (ขาว/เหลือง)</td>
+                                    <td class="p-4 text-center font-bold text-[17px] text-primary">1 แผ่น</td>
+                                    <td class="p-4 text-gray-600">โปรตีนสูงและอยู่ท้อง เหมาะสำหรับมังสวิรัติ</td>
+                                </tr>
+                                <tr class="hover:bg-gray-50">
+                                    <td class="p-4 font-semibold text-blue-600">นม</td>
+                                    <td class="p-4">นมวัว / นมถั่วเหลือง (สูตรปกติ)</td>
+                                    <td class="p-4 text-center font-bold text-[17px] text-primary">2.5 - 3 กล่อง<br><span class="text-[13px] font-normal text-gray-500">(กล่องละ 200 ml)</span></td>
+                                    <td class="p-4 text-gray-600">ผู้ป่วยโรคไต (ที่ต้องจำกัดฟอสฟอรัส) ควรระมัดระวังการดื่มนมวัว</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <hr class="border-gray-200">
+
+                <div>
+                    <h2 class="text-xl font-bold text-gray-800 mb-4 border-l-4 border-secondary pl-3">ไอเดียเมนูอาหารโปรตีนสูง</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         
-                        <tr class="hover:bg-gray-50 border-b">
-                            <td class="p-4 font-semibold text-amber-600">ไข่</td>
-                            <td class="p-4">ไข่ไก่ (เบอร์ 2-3)</td>
-                            <td class="p-4 text-center font-bold text-[17px] text-primary">3 ฟอง</td>
-                            <td class="p-4 text-gray-600">หากต้องการลดไขมัน/คอเลสเตอรอล ให้ใช้ <span class="font-semibold">ไข่ขาว 5-6 ฟอง</span> แทน</td>
-                        </tr>
-                        <tr class="hover:bg-gray-50 border-b">
-                            <td class="p-4 font-semibold text-orange-700">เต้าหู้</td>
-                            <td class="p-4">เต้าหู้ไข่ / เต้าหู้หลอดถั่วเหลือง</td>
-                            <td class="p-4 text-center font-bold text-[17px] text-primary">1.5 - 2 หลอด</td>
-                            <td class="p-4 text-gray-600">ตรวจสอบโซเดียมในฉลากเพิ่มเติม</td>
-                        </tr>
-                        <tr class="hover:bg-gray-50 border-b">
-                            <td class="p-4 font-semibold text-orange-700">เต้าหู้</td>
-                            <td class="p-4">เต้าหู้แข็ง (ขาว/เหลือง)</td>
-                            <td class="p-4 text-center font-bold text-[17px] text-primary">1 แผ่น</td>
-                            <td class="p-4 text-gray-600">โปรตีนสูงและอยู่ท้อง เหมาะสำหรับมังสวิรัติ</td>
-                        </tr>
-                        <tr class="hover:bg-gray-50">
-                            <td class="p-4 font-semibold text-blue-600">นม</td>
-                            <td class="p-4">นมวัว / นมถั่วเหลือง (สูตรปกติ)</td>
-                            <td class="p-4 text-center font-bold text-[17px] text-primary">2.5 - 3 กล่อง<br><span class="text-[13px] font-normal text-gray-500">(กล่องละ 200 ml)</span></td>
-                            <td class="p-4 text-gray-600">ผู้ป่วยโรคไต (ที่ต้องจำกัดฟอสฟอรัส) ควรระมัดระวังการดื่มนมวัว</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            
-            <div class="mt-8 text-center no-print">
-                <button onclick="closeFoodPage()" class="bg-gray-800 hover:bg-black text-white px-8 py-3 rounded-xl font-bold shadow-md transition">
-                    กลับไปที่หน้าผลลัพธ์ของคุณ
-                </button>
+                        <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="font-bold text-[17px] text-dark">🍛 ข้าวผัดหมูสับ + ไข่ดาว</h3>
+                                <span class="bg-secondary text-white text-[12px] font-bold px-2 py-1 rounded">โปรตีนสูง</span>
+                            </div>
+                            <div class="text-[14px] text-gray-600 space-y-1 mb-3">
+                                <p>• เนื้อหมูไม่ติดมัน 100 กรัม <span class="text-secondary">(~25g)</span></p>
+                                <p>• ไข่ไก่ 1 ฟอง <span class="text-secondary">(~7g)</span></p>
+                            </div>
+                            <div class="pt-3 border-t border-gray-100 flex justify-between items-center">
+                                <span class="text-[14px] font-medium text-gray-500">โปรตีนที่ได้รับประมาณ</span>
+                                <span class="font-bold text-lg text-primary">32 กรัม</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="font-bold text-[17px] text-dark">🥩 สเต็กอกไก่ย่าง</h3>
+                                <span class="bg-secondary text-white text-[12px] font-bold px-2 py-1 rounded">ไขมันต่ำ</span>
+                            </div>
+                            <div class="text-[14px] text-gray-600 space-y-1 mb-3">
+                                <p>• อกไก่ลอกหนัง (สุก) 150 กรัม <span class="text-secondary">(~45g)</span></p>
+                            </div>
+                            <div class="pt-3 border-t border-gray-100 flex justify-between items-center">
+                                <span class="text-[14px] font-medium text-gray-500">โปรตีนที่ได้รับประมาณ</span>
+                                <span class="font-bold text-lg text-primary">45 กรัม</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="font-bold text-[17px] text-dark">🍲 กะเพราเต้าหู้หมูสับ</h3>
+                                <span class="bg-secondary text-white text-[12px] font-bold px-2 py-1 rounded">โปรตีนสูง</span>
+                            </div>
+                            <div class="text-[14px] text-gray-600 space-y-1 mb-3">
+                                <p>• เนื้อหมูสับ 50 กรัม <span class="text-secondary">(~12.5g)</span></p>
+                                <p>• เต้าหู้แข็ง 100 กรัม (ประมาณ 1 แผ่น) <span class="text-secondary">(~15g)</span></p>
+                            </div>
+                            <div class="pt-3 border-t border-gray-100 flex justify-between items-center">
+                                <span class="text-[14px] font-medium text-gray-500">โปรตีนที่ได้รับประมาณ</span>
+                                <span class="font-bold text-lg text-primary">27.5 กรัม</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="font-bold text-[17px] text-dark">🐟 ปลานิลนึ่งซีอิ๊ว</h3>
+                                <span class="bg-secondary text-white text-[12px] font-bold px-2 py-1 rounded">ย่อยง่าย</span>
+                            </div>
+                            <div class="text-[14px] text-gray-600 space-y-1 mb-3">
+                                <p>• เนื้อปลานิล 150 กรัม (ประมาณเกือบ 1 ตัว) <span class="text-secondary">(~30g)</span></p>
+                            </div>
+                            <div class="pt-3 border-t border-gray-100 flex justify-between items-center">
+                                <span class="text-[14px] font-medium text-gray-500">โปรตีนที่ได้รับประมาณ</span>
+                                <span class="font-bold text-lg text-primary">30 กรัม</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <hr class="border-gray-200">
+
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                    <div class="bg-indigo-50 border-b border-indigo-100 p-4">
+                        <h2 class="text-xl font-bold text-indigo-900 flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                            </svg>
+                            เครื่องคำนวณโปรตีนมื้ออาหาร (เลือกผสมวัตถุดิบ)
+                        </h2>
+                        <p class="text-[14px] text-indigo-700 mt-1">ระบุตัวเลขปริมาณ และเลือกหน่วยที่ต้องการเพื่อประเมินโปรตีนในมื้ออาหารของคุณ</p>
+                    </div>
+                    
+                    <div class="p-4 md:p-5">
+                        <div class="flex flex-col md:flex-row gap-3 mb-4">
+                            <select id="food-select" onchange="updateUnits()" class="flex-[2] bg-gray-50 border border-gray-300 rounded-lg p-3 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
+                                <option data-u1="กรัม" data-v1="0.30" data-u2="ช้อนกินข้าว" data-v2="4.5">อกไก่ / สันในไก่ (สุก)</option>
+                                <option data-u1="กรัม" data-v1="0.25" data-u2="ช้อนกินข้าว" data-v2="3.75">เนื้อหมูไม่ติดมัน (สุก)</option>
+                                <option data-u1="กรัม" data-v1="0.20" data-u2="ชิ้น/ตัว" data-v2="20.0">เนื้อปลาทั่วไป (สุก)</option>
+                                <option data-u1="กรัม" data-v1="0.22" data-u2="ตัว" data-v2="2.2">เนื้อกุ้ง (สุก)</option>
+                                <option data-u1="กรัม" data-v1="0.15" data-u2="แผ่น" data-v2="15.0">เต้าหู้แข็ง (ขาว/เหลือง)</option>
+                                <option data-u1="ฟอง" data-v1="7.0" data-u2="กรัม" data-v2="0.14">ไข่ไก่</option>
+                                <option data-u1="ฟอง" data-v1="4.0" data-u2="กรัม" data-v2="0.12">ไข่ขาวต้ม</option>
+                                <option data-u1="หลอด" data-v1="8.0" data-u2="กรัม" data-v2="0.06">เต้าหู้ไข่/หลอด</option>
+                                <option data-u1="กล่อง" data-v1="8.0" data-u2="มิลลิลิตร (ml)" data-v2="0.04">นมสด/นมถั่วเหลือง</option>
+                            </select>
+                            
+                            <input type="number" id="food-amount" min="0.1" step="0.1" class="flex-1 md:w-24 bg-gray-50 border border-gray-300 rounded-lg p-3 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500" placeholder="ปริมาณ (ตัวเลข)">
+                            
+                            <select id="unit-select" class="flex-1 md:w-32 bg-gray-50 border border-gray-300 rounded-lg p-3 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
+                                </select>
+                            
+                            <button onclick="addMealItem()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg transition">
+                                เพิ่มวัตถุดิบ
+                            </button>
+                        </div>
+
+                        <div class="bg-gray-50 rounded-lg border border-gray-200 min-h-[100px]">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="bg-gray-200 text-gray-700 text-[14px]">
+                                        <th class="p-2 pl-4 border-b">วัตถุดิบที่เลือก</th>
+                                        <th class="p-2 border-b text-center w-28">ปริมาณ</th>
+                                        <th class="p-2 border-b text-center w-28">โปรตีน (g)</th>
+                                        <th class="p-2 border-b text-center w-16">ลบ</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="meal-items-tbody" class="text-[15px] text-gray-800">
+                                    <tr id="empty-meal-row">
+                                        <td colspan="4" class="p-4 text-center text-gray-400 text-[14px]">ยังไม่มีการเลือกวัตถุดิบ</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="mt-4 flex justify-between items-center bg-indigo-50 p-4 rounded-lg border border-indigo-100">
+                            <span class="font-bold text-gray-800">โปรตีนรวมในมื้อนี้:</span>
+                            <div class="text-indigo-700 font-bold">
+                                <span id="total-meal-protein" class="text-3xl">0.0</span> กรัม
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
+
+        <div id="tab-3" class="tab-content">
+            <div class="p-5 md:p-8">
+                
+                <div id="tab3-protein-summary" class="hidden mb-6 bg-green-50 border border-green-200 rounded-xl p-4 shadow-sm">
+                    <div class="flex items-start md:items-center gap-3">
+                        <div class="bg-green-100 p-2 rounded-lg text-green-600 shrink-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-[16px] text-gray-800 font-medium">เป้าหมายโปรตีนต่อวันของคุณคือ: <span id="tab3-target-protein" class="text-xl font-bold text-secondary ml-1">0 - 0</span> <span class="text-gray-600 font-normal">กรัม/วัน</span></p>
+                            <p class="text-[13px] text-gray-500 mt-1">สามารถนำเป้าหมายนี้มากรอกในช่อง "ต้องการโปรตีน" ด้านล่าง เพื่อคำนวณปริมาณที่ต้องชงได้เลยครับ</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between mb-4 border-l-4 border-primary pl-3">
+                    <h2 class="text-xl font-bold text-gray-800">ตารางคำนวณอาหารเสริม</h2>
+                </div>
+                
+                <div class="overflow-x-auto rounded-xl border border-gray-200 shadow-sm">
+                    <table class="w-full text-left border-collapse min-w-[800px]">
+                        <thead>
+                            <tr class="bg-primary text-white text-[16px]">
+                                <th class="p-4 border-b border-r border-blue-600 w-[25%]">ผลิตภัณฑ์</th>
+                                <th class="p-4 border-b border-r border-blue-600 text-center w-[15%]">โปรตีนที่ได้<br>(ต่อ 1 ช้อนตวง)</th>
+                                <th class="p-4 border-b border-r border-blue-600 w-[30%]">คำนวณหาปริมาณที่ต้องกิน<br><span class="text-sm font-normal text-blue-200">(ต้องการโปรตีน → ต้องกินกี่ช้อน)</span></th>
+                                <th class="p-4 border-b w-[30%]">คำนวณโปรตีนที่จะได้รับ<br><span class="text-sm font-normal text-blue-200">(กินกี่ช้อน → ได้โปรตีนเท่าไหร่)</span></th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-[15px] text-gray-800 bg-white">
+                            
+                            <tr class="hover:bg-gray-50 border-b">
+                                <td class="p-4 border-r border-gray-200">
+                                    <div class="flex items-center gap-3">
+                                        <img src="GlucoMeal400g.jpg" alt="GlucoMeal" class="w-16 h-16 md:w-20 md:h-20 object-contain rounded-lg border border-gray-200 shadow-sm bg-white shrink-0" onerror="this.onerror=null; this.src='https://placehold.co/100x100/e2e8f0/64748b?text=GlucoMeal';">
+                                        <div>
+                                            <div class="font-bold text-dark text-[15px]">GlucoMeal</div>
+                                            <div class="text-[12px] font-normal text-gray-500 mt-1">1 ช้อน = 25 กรัม</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="p-4 text-center border-r border-gray-200">
+                                    <span class="font-bold text-secondary text-[18px]">4.50</span> กรัม
+                                </td>
+                                <td class="p-4 border-r border-gray-200 bg-blue-50/50">
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <span class="font-medium text-sm">ต้องการโปรตีน</span>
+                                        <input type="number" id="gluco-req-protein" class="w-20 px-2 py-1 border border-gray-300 rounded focus:ring-1 focus:ring-primary outline-none text-center" placeholder="0" oninput="calcSupplement('gluco')">
+                                        <span class="font-medium text-sm">กรัม</span>
+                                    </div>
+                                    <div class="text-[13px] text-gray-700 mt-2 bg-white p-2 rounded border border-gray-100 shadow-sm">
+                                        ➔ ต้องกินผลิตภัณฑ์ <span id="gluco-res-grams" class="font-bold text-primary">0</span> กรัม <br>
+                                        <span class="text-gray-500">(เท่ากับตักประมาณ <span id="gluco-res-scoops" class="font-bold text-dark">0</span> ช้อนตวง)</span>
+                                    </div>
+                                </td>
+                                <td class="p-4 bg-green-50/50">
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <span class="font-medium text-sm">ชงกิน</span>
+                                        <input type="number" id="gluco-use-scoops" class="w-20 px-2 py-1 border border-gray-300 rounded focus:ring-1 focus:ring-secondary outline-none text-center" placeholder="0" oninput="calcSupplement('gluco')">
+                                        <span class="font-medium text-sm">ช้อนตวง</span>
+                                    </div>
+                                    <div class="text-[13px] text-gray-700 mt-2 bg-white p-2 rounded border border-gray-100 shadow-sm">
+                                        ➔ ได้รับโปรตีน <span id="gluco-res-protein" class="font-bold text-secondary text-[16px]">0</span> กรัม
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr class="hover:bg-gray-50 border-b">
+                                <td class="p-4 border-r border-gray-200">
+                                    <div class="flex items-center gap-3">
+                                        <img src="BoostGlucoseControl.jpg" alt="Boost Glucose Control" class="w-16 h-16 md:w-20 md:h-20 object-contain rounded-lg border border-gray-200 shadow-sm bg-white shrink-0" onerror="this.onerror=null; this.src='https://placehold.co/100x100/e2e8f0/64748b?text=BOOST+G.';">
+                                        <div>
+                                            <div class="font-bold text-dark text-[15px]">BOOST GLUCOSE CONTROL</div>
+                                            <div class="text-[12px] font-normal text-gray-500 mt-1">1 ช้อน ≈ 6.88 กรัม</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="p-4 text-center border-r border-gray-200">
+                                    <span class="font-bold text-secondary text-[18px]">1.41</span> กรัม
+                                </td>
+                                <td class="p-4 border-r border-gray-200 bg-blue-50/50">
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <span class="font-medium text-sm">ต้องการโปรตีน</span>
+                                        <input type="number" id="bgc-req-protein" class="w-20 px-2 py-1 border border-gray-300 rounded focus:ring-1 focus:ring-primary outline-none text-center" placeholder="0" oninput="calcSupplement('bgc')">
+                                        <span class="font-medium text-sm">กรัม</span>
+                                    </div>
+                                    <div class="text-[13px] text-gray-700 mt-2 bg-white p-2 rounded border border-gray-100 shadow-sm">
+                                        ➔ ต้องกินผลิตภัณฑ์ <span id="bgc-res-grams" class="font-bold text-primary">0</span> กรัม <br>
+                                        <span class="text-gray-500">(เท่ากับตักประมาณ <span id="bgc-res-scoops" class="font-bold text-dark">0</span> ช้อนตวง)</span>
+                                    </div>
+                                </td>
+                                <td class="p-4 bg-green-50/50">
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <span class="font-medium text-sm">ชงกิน</span>
+                                        <input type="number" id="bgc-use-scoops" class="w-20 px-2 py-1 border border-gray-300 rounded focus:ring-1 focus:ring-secondary outline-none text-center" placeholder="0" oninput="calcSupplement('bgc')">
+                                        <span class="font-medium text-sm">ช้อนตวง</span>
+                                    </div>
+                                    <div class="text-[13px] text-gray-700 mt-2 bg-white p-2 rounded border border-gray-100 shadow-sm">
+                                        ➔ ได้รับโปรตีน <span id="bgc-res-protein" class="font-bold text-secondary text-[16px]">0</span> กรัม
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr class="hover:bg-gray-50 border-b">
+                                <td class="p-4 border-r border-gray-200">
+                                    <div class="flex items-center gap-3">
+                                        <img src="BoostOptimumProbiotics.jpg" alt="Boost Optimum Probiotics" class="w-16 h-16 md:w-20 md:h-20 object-contain rounded-lg border border-gray-200 shadow-sm bg-white shrink-0" onerror="this.onerror=null; this.src='https://placehold.co/100x100/e2e8f0/64748b?text=BOOST+P.';">
+                                        <div>
+                                            <div class="font-bold text-dark text-[15px]">BOOST OPTIMUM<br><span class="font-normal text-sm">(มีโพรไบโอติก)</span></div>
+                                            <div class="text-[12px] font-normal text-gray-500 mt-1">1 ช้อน ≈ 7.86 กรัม</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="p-4 text-center border-r border-gray-200">
+                                    <span class="font-bold text-secondary text-[18px]">1.45</span> กรัม
+                                </td>
+                                <td class="p-4 border-r border-gray-200 bg-blue-50/50">
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <span class="font-medium text-sm">ต้องการโปรตีน</span>
+                                        <input type="number" id="bop-req-protein" class="w-20 px-2 py-1 border border-gray-300 rounded focus:ring-1 focus:ring-primary outline-none text-center" placeholder="0" oninput="calcSupplement('bop')">
+                                        <span class="font-medium text-sm">กรัม</span>
+                                    </div>
+                                    <div class="text-[13px] text-gray-700 mt-2 bg-white p-2 rounded border border-gray-100 shadow-sm">
+                                        ➔ ต้องกินผลิตภัณฑ์ <span id="bop-res-grams" class="font-bold text-primary">0</span> กรัม <br>
+                                        <span class="text-gray-500">(เท่ากับตักประมาณ <span id="bop-res-scoops" class="font-bold text-dark">0</span> ช้อนตวง)</span>
+                                    </div>
+                                </td>
+                                <td class="p-4 bg-green-50/50">
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <span class="font-medium text-sm">ชงกิน</span>
+                                        <input type="number" id="bop-use-scoops" class="w-20 px-2 py-1 border border-gray-300 rounded focus:ring-1 focus:ring-secondary outline-none text-center" placeholder="0" oninput="calcSupplement('bop')">
+                                        <span class="font-medium text-sm">ช้อนตวง</span>
+                                    </div>
+                                    <div class="text-[13px] text-gray-700 mt-2 bg-white p-2 rounded border border-gray-100 shadow-sm">
+                                        ➔ ได้รับโปรตีน <span id="bop-res-protein" class="font-bold text-secondary text-[16px]">0</span> กรัม
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr class="hover:bg-gray-50 border-b">
+                                <td class="p-4 border-r border-gray-200">
+                                    <div class="flex items-center gap-3">
+                                        <img src="BoostOptimumLactoba.jpg" alt="Boost Optimum Lactoba" class="w-16 h-16 md:w-20 md:h-20 object-contain rounded-lg border border-gray-200 shadow-sm bg-white shrink-0" onerror="this.onerror=null; this.src='https://placehold.co/100x100/e2e8f0/64748b?text=BOOST+L.';">
+                                        <div>
+                                            <div class="font-bold text-dark text-[15px]">BOOST OPTIMUM<br><span class="font-normal text-sm">(ผสมแล็กโทบาซิลลัส)</span></div>
+                                            <div class="text-[12px] font-normal text-gray-500 mt-1">1 ช้อน ≈ 7.86 กรัม</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="p-4 text-center border-r border-gray-200">
+                                    <span class="font-bold text-secondary text-[18px]">1.45</span> กรัม
+                                </td>
+                                <td class="p-4 border-r border-gray-200 bg-blue-50/50">
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <span class="font-medium text-sm">ต้องการโปรตีน</span>
+                                        <input type="number" id="bol-req-protein" class="w-20 px-2 py-1 border border-gray-300 rounded focus:ring-1 focus:ring-primary outline-none text-center" placeholder="0" oninput="calcSupplement('bol')">
+                                        <span class="font-medium text-sm">กรัม</span>
+                                    </div>
+                                    <div class="text-[13px] text-gray-700 mt-2 bg-white p-2 rounded border border-gray-100 shadow-sm">
+                                        ➔ ต้องกินผลิตภัณฑ์ <span id="bol-res-grams" class="font-bold text-primary">0</span> กรัม <br>
+                                        <span class="text-gray-500">(เท่ากับตักประมาณ <span id="bol-res-scoops" class="font-bold text-dark">0</span> ช้อนตวง)</span>
+                                    </div>
+                                </td>
+                                <td class="p-4 bg-green-50/50">
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <span class="font-medium text-sm">ชงกิน</span>
+                                        <input type="number" id="bol-use-scoops" class="w-20 px-2 py-1 border border-gray-300 rounded focus:ring-1 focus:ring-secondary outline-none text-center" placeholder="0" oninput="calcSupplement('bol')">
+                                        <span class="font-medium text-sm">ช้อนตวง</span>
+                                    </div>
+                                    <div class="text-[13px] text-gray-700 mt-2 bg-white p-2 rounded border border-gray-100 shadow-sm">
+                                        ➔ ได้รับโปรตีน <span id="bol-res-protein" class="font-bold text-secondary text-[16px]">0</span> กรัม
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr class="hover:bg-gray-50">
+                                <td class="p-4 border-r border-gray-200">
+                                    <div class="flex items-center gap-3">
+                                        <img src="NeoMoon.jpg" alt="Neo-Mune" class="w-16 h-16 md:w-20 md:h-20 object-contain rounded-lg border border-gray-200 shadow-sm bg-white shrink-0" onerror="this.onerror=null; this.src='https://placehold.co/100x100/e2e8f0/64748b?text=NEO-MUNE';">
+                                        <div>
+                                            <div class="font-bold text-dark text-[15px]">NEO-MUNE</div>
+                                            <div class="text-[12px] font-normal text-gray-500 mt-1">1 ช้อน = 8.5 กรัม</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="p-4 text-center border-r border-gray-200">
+                                    <span class="font-bold text-secondary text-[18px]">2.22</span> กรัม
+                                </td>
+                                <td class="p-4 border-r border-gray-200 bg-blue-50/50">
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <span class="font-medium text-sm">ต้องการโปรตีน</span>
+                                        <input type="number" id="neo-req-protein" class="w-20 px-2 py-1 border border-gray-300 rounded focus:ring-1 focus:ring-primary outline-none text-center" placeholder="0" oninput="calcSupplement('neo')">
+                                        <span class="font-medium text-sm">กรัม</span>
+                                    </div>
+                                    <div class="text-[13px] text-gray-700 mt-2 bg-white p-2 rounded border border-gray-100 shadow-sm">
+                                        ➔ ต้องกินผลิตภัณฑ์ <span id="neo-res-grams" class="font-bold text-primary">0</span> กรัม <br>
+                                        <span class="text-gray-500">(เท่ากับตักประมาณ <span id="neo-res-scoops" class="font-bold text-dark">0</span> ช้อนตวง)</span>
+                                    </div>
+                                </td>
+                                <td class="p-4 bg-green-50/50">
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <span class="font-medium text-sm">ชงกิน</span>
+                                        <input type="number" id="neo-use-scoops" class="w-20 px-2 py-1 border border-gray-300 rounded focus:ring-1 focus:ring-secondary outline-none text-center" placeholder="0" oninput="calcSupplement('neo')">
+                                        <span class="font-medium text-sm">ช้อนตวง</span>
+                                    </div>
+                                    <div class="text-[13px] text-gray-700 mt-2 bg-white p-2 rounded border border-gray-100 shadow-sm">
+                                        ➔ ได้รับโปรตีน <span id="neo-res-protein" class="font-bold text-secondary text-[16px]">0</span> กรัม
+                                    </div>
+                                </td>
+                            </tr>
+                            
+                        </tbody>
+                    </table>
+                </div>
+                
+                <p class="text-xs text-red-500 mt-3 no-print">*หมายเหตุ: หากรูปภาพไม่แสดงผล โปรดตรวจสอบให้แน่ใจว่าได้นำไฟล์รูปภาพนามสกุล .jpg ทั้งหมดไปไว้ในโฟลเดอร์เดียวกันกับไฟล์เว็บนี้นะครับ</p>
+            </div>
+        </div>
+
     </div>
 
     <script>
-        // ระบบสลับหน้า
-        function openFoodPage() {
-            document.getElementById('calculator-view').style.display = 'none';
-            document.getElementById('food-view').style.display = 'block';
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+        // === ฟังก์ชันสลับแท็บ ===
+        function switchTab(tabId, btnElement) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            document.getElementById(tabId).classList.add('active');
+            btnElement.classList.add('active');
         }
 
-        function closeFoodPage() {
-            document.getElementById('food-view').style.display = 'none';
-            document.getElementById('calculator-view').style.display = 'block';
+        // === ฟังก์ชันสำหรับแท็บ 2: เครื่องคำนวณโปรตีนมื้ออาหาร ===
+        let mealItems = [];
+
+        function updateUnits() {
+            const foodSelect = document.getElementById('food-select');
+            const unitSelect = document.getElementById('unit-select');
+            const selectedOption = foodSelect.options[foodSelect.selectedIndex];
             
-            // เลื่อนกลับมาที่ตำแหน่งผลลัพธ์
-            const resultSection = document.getElementById('result-section');
-            if (resultSection.style.display === 'block') {
-                setTimeout(() => {
-                    resultSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }, 50);
-            } else {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+            unitSelect.innerHTML = ''; 
+            
+            const u1 = selectedOption.getAttribute('data-u1');
+            const v1 = selectedOption.getAttribute('data-v1');
+            if (u1 && v1) {
+                unitSelect.innerHTML += `<option value="${v1}">${u1}</option>`;
+            }
+            
+            const u2 = selectedOption.getAttribute('data-u2');
+            const v2 = selectedOption.getAttribute('data-v2');
+            if (u2 && v2) {
+                unitSelect.innerHTML += `<option value="${v2}">${u2}</option>`;
             }
         }
 
-        // ระบบฟอร์มและการคำนวณ
+        function addMealItem() {
+            const foodSelect = document.getElementById('food-select');
+            const amountInput = document.getElementById('food-amount').value;
+            const unitSelect = document.getElementById('unit-select');
+            
+            if (!amountInput || parseFloat(amountInput) <= 0) {
+                alert("กรุณาระบุปริมาณวัตถุดิบครับ");
+                return;
+            }
+
+            const amount = parseFloat(amountInput);
+            const foodName = foodSelect.options[foodSelect.selectedIndex].text;
+            const selectedUnitText = unitSelect.options[unitSelect.selectedIndex].text;
+            const proteinPerUnit = parseFloat(unitSelect.value);
+            
+            const calculatedProtein = amount * proteinPerUnit;
+
+            mealItems.push({
+                name: foodName,
+                amount: amount,
+                unit: selectedUnitText,
+                protein: calculatedProtein
+            });
+
+            document.getElementById('food-amount').value = '';
+            renderMealItems();
+        }
+
+        function removeMealItem(index) {
+            mealItems.splice(index, 1);
+            renderMealItems();
+        }
+
+        function renderMealItems() {
+            const tbody = document.getElementById('meal-items-tbody');
+            tbody.innerHTML = '';
+            
+            let totalProtein = 0;
+
+            if (mealItems.length === 0) {
+                tbody.innerHTML = `
+                    <tr id="empty-meal-row">
+                        <td colspan="4" class="p-4 text-center text-gray-400 text-[14px]">ยังไม่มีการเลือกวัตถุดิบ</td>
+                    </tr>
+                `;
+            } else {
+                mealItems.forEach((item, index) => {
+                    totalProtein += item.protein;
+                    tbody.innerHTML += `
+                        <tr class="border-b bg-white">
+                            <td class="p-2 pl-4">${item.name}</td>
+                            <td class="p-2 text-center text-gray-600">${item.amount} ${item.unit}</td>
+                            <td class="p-2 text-center font-bold text-secondary">${item.protein.toFixed(1)}</td>
+                            <td class="p-2 text-center">
+                                <button onclick="removeMealItem(${index})" class="text-red-500 hover:text-red-700 font-bold px-2 py-1 rounded hover:bg-red-50 transition">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                    </svg>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+
+            document.getElementById('total-meal-protein').innerText = totalProtein.toFixed(1);
+        }
+
+        // === ฟังก์ชันสำหรับแท็บ 3: คำนวณอาหารเสริมทั้งหมด ===
+        // ข้อมูลอ้างอิงของแต่ละผลิตภัณฑ์
+        const supplementData = {
+            'gluco': { gPerScoop: 25.0, pPerScoop: 4.50 },
+            'bgc': { gPerScoop: 55 / 8, pPerScoop: (20.55 / 100) * (55 / 8) }, // ~6.875g/scoop -> ~1.41g protein
+            'bop': { gPerScoop: 55 / 7, pPerScoop: (18.5 / 100) * (55 / 7) },  // ~7.857g/scoop -> ~1.45g protein
+            'bol': { gPerScoop: 55 / 7, pPerScoop: (18.5 / 100) * (55 / 7) },  // ~7.857g/scoop -> ~1.45g protein
+            'neo': { gPerScoop: 8.5, pPerScoop: (26.07 / 100) * 8.5 }          // 8.5g/scoop -> ~2.22g protein
+        };
+
+        // ฟังก์ชันคำนวณแบบสากล รองรับทุกผลิตภัณฑ์
+        function calcSupplement(productId) {
+            const data = supplementData[productId];
+            
+            // 1. ส่วนคำนวณจากความต้องการโปรตีน
+            const reqProtein = parseFloat(document.getElementById(`${productId}-req-protein`).value) || 0;
+            const requiredScoops = reqProtein / data.pPerScoop;
+            const requiredGrams = requiredScoops * data.gPerScoop;
+            
+            document.getElementById(`${productId}-res-scoops`).innerText = requiredScoops.toFixed(1);
+            document.getElementById(`${productId}-res-grams`).innerText = requiredGrams.toFixed(1);
+
+            // 2. ส่วนคำนวณจากการกินแบบเป็นช้อน
+            const useScoops = parseFloat(document.getElementById(`${productId}-use-scoops`).value) || 0;
+            const receivedProtein = useScoops * data.pPerScoop;
+            
+            document.getElementById(`${productId}-res-protein`).innerText = receivedProtein.toFixed(1);
+        }
+
+        // === ฟังก์ชันสำหรับแท็บ 1: ฟอร์มและการคำนวณหลัก ===
         function resetForm() {
             document.getElementById('gender').value = 'male';
             document.getElementById('age').value = '';
@@ -360,7 +811,8 @@
             toggleNone();
             
             document.getElementById('result-section').style.display = 'none';
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            document.getElementById('tab3-protein-summary').classList.add('hidden');
+            document.getElementById('tab3-target-protein').innerText = '0 - 0';
         }
 
         function toggleNone() {
@@ -501,15 +953,18 @@
                     }
                 }
 
-                // แสดงผลหน้าจอ
                 document.getElementById('res-bmi-value').innerText = bmi.toFixed(1);
                 document.getElementById('res-bmi-text').innerText = bmiCategory;
                 document.getElementById('res-bmi-text').className = `text-[16px] font-medium mt-1 ${bmiColor}`;
 
                 document.getElementById('res-calories').innerText = targetCalories.toLocaleString('th-TH');
-                document.getElementById('res-protein').innerText = `${Math.round(minProtein)} - ${Math.round(maxProtein)}`;
                 
+                const finalProteinStr = `${Math.round(minProtein)} - ${Math.round(maxProtein)}`;
+                document.getElementById('res-protein').innerText = finalProteinStr;
                 document.getElementById('res-protein-detail').innerHTML = htmlOutput;
+
+                document.getElementById('tab3-target-protein').innerText = finalProteinStr;
+                document.getElementById('tab3-protein-summary').classList.remove('hidden');
 
                 const resultSection = document.getElementById('result-section');
                 resultSection.style.display = 'block';
@@ -523,6 +978,9 @@
                 alert("เกิดข้อผิดพลาดในการคำนวณ โปรดตรวจสอบข้อมูลอีกครั้งครับ");
             }
         }
+
+        // ตั้งค่าหน่วยตั้งต้นเมื่อโหลดหน้าเว็บครั้งแรก
+        document.addEventListener('DOMContentLoaded', updateUnits);
     </script>
 </body>
 </html>
