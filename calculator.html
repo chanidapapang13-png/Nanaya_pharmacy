@@ -72,7 +72,14 @@
 
     <div class="max-w-5xl w-full bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200">
         
-        <div class="bg-primary p-4 md:p-5 text-white no-print relative">
+        <div class="bg-primary p-4 md:p-5 text-white no-print relative flex items-center justify-center min-h-[80px]">
+            <a href="index.html" class="absolute left-4 md:left-5 bg-white/20 hover:bg-white/30 text-white px-3 py-2 rounded-lg text-sm font-medium transition flex items-center gap-2 shadow-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                <span class="hidden sm:inline">กลับหน้าหลัก</span>
+            </a>
+            
             <div class="text-center">
                 <h1 class="text-xl md:text-2xl font-bold mb-1">โปรแกรมคำนวณโภชนาการ</h1>
                 <p class="text-sm md:text-base opacity-90">ประเมินพลังงาน โปรตีน และคำนวณอาหารเสริมทางการแพทย์</p>
@@ -771,13 +778,12 @@
         // ข้อมูลอ้างอิงของแต่ละผลิตภัณฑ์
         const supplementData = {
             'gluco': { gPerScoop: 25.0, pPerScoop: 4.50 },
-            'bgc': { gPerScoop: 55 / 8, pPerScoop: (20.55 / 100) * (55 / 8) }, // ~6.875g/scoop -> ~1.41g protein
-            'bop': { gPerScoop: 55 / 7, pPerScoop: (18.5 / 100) * (55 / 7) },  // ~7.857g/scoop -> ~1.45g protein
-            'bol': { gPerScoop: 55 / 7, pPerScoop: (18.5 / 100) * (55 / 7) },  // ~7.857g/scoop -> ~1.45g protein
-            'neo': { gPerScoop: 8.5, pPerScoop: (26.07 / 100) * 8.5 }          // 8.5g/scoop -> ~2.22g protein
+            'bgc': { gPerScoop: 55 / 8, pPerScoop: (20.55 / 100) * (55 / 8) }, 
+            'bop': { gPerScoop: 55 / 7, pPerScoop: (18.5 / 100) * (55 / 7) },  
+            'bol': { gPerScoop: 55 / 7, pPerScoop: (18.5 / 100) * (55 / 7) },  
+            'neo': { gPerScoop: 8.5, pPerScoop: (26.07 / 100) * 8.5 }          
         };
 
-        // ฟังก์ชันคำนวณแบบสากล รองรับทุกผลิตภัณฑ์
         function calcSupplement(productId) {
             const data = supplementData[productId];
             
