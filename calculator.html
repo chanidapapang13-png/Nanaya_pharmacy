@@ -150,32 +150,56 @@
 
                 <div>
                     <label class="block font-semibold mb-3 text-[17px] text-dark">สภาวะสุขภาพและโรคร่วม (เลือกได้มากกว่า 1 ข้อ)</label>
-                    <div class="space-y-3 bg-bglight p-4 rounded-xl border border-gray-200">
-                        <label class="flex items-start cursor-pointer hover:bg-gray-100 p-2 rounded-lg transition duration-200">
-                            <input type="checkbox" id="chk_none" class="mt-0.5 flex-shrink-0" onchange="toggleNone()" checked>
-                            <span class="ml-3 text-[17px] text-gray-700 font-medium text-primary">ไม่มีโรคร่วม / สุขภาพแข็งแรง</span>
+                    <div class="space-y-3 bg-bglight p-4 rounded-xl border border-gray-200 h-80 overflow-y-auto">
+                        <label class="flex items-start cursor-pointer hover:bg-gray-200 p-2 rounded-lg transition duration-200">
+                            <input type="checkbox" id="chk_none" class="mt-0.5 flex-shrink-0 w-5 h-5" onchange="toggleNone()" checked>
+                            <span class="ml-3 text-[17px] font-bold text-primary">ไม่มีโรคร่วม / สุขภาพแข็งแรงทั่วไป</span>
                         </label>
-                        <hr class="border-gray-200 my-2">
-                        <label class="flex items-start cursor-pointer hover:bg-gray-100 p-2 rounded-lg transition duration-200">
-                            <input type="checkbox" id="chk_pregnant" class="mt-0.5 flex-shrink-0" onchange="uncheckNone()">
-                            <span class="ml-3 text-[17px] text-gray-700">ตั้งครรภ์</span>
+                        <hr class="border-gray-300 my-2">
+                        <label class="flex items-start cursor-pointer hover:bg-gray-200 p-2 rounded-lg transition duration-200">
+                            <input type="checkbox" id="chk_pregnant" class="mt-0.5 flex-shrink-0 w-5 h-5 condition-chk" onchange="uncheckNone()">
+                            <span class="ml-3 text-[17px] text-gray-800">ผู้ตั้งครรภ์</span>
                         </label>
-                        <label class="flex items-start cursor-pointer hover:bg-gray-100 p-2 rounded-lg transition duration-200">
-                            <input type="checkbox" id="chk_breastfeeding" class="mt-0.5 flex-shrink-0" onchange="uncheckNone()">
-                            <span class="ml-3 text-[17px] text-gray-700">ให้นมบุตร</span>
+                        <label class="flex items-start cursor-pointer hover:bg-gray-200 p-2 rounded-lg transition duration-200">
+                            <input type="checkbox" id="chk_sarcopenia" class="mt-0.5 flex-shrink-0 w-5 h-5 condition-chk" onchange="uncheckNone()">
+                            <span class="ml-3 text-[17px] text-gray-800">ผู้สูงอายุที่มีภาวะกล้ามเนื้อลีบหรือร่างกายอ่อนแอ (Sarcopenia/Frailty)</span>
                         </label>
-                        <label class="flex items-start cursor-pointer hover:bg-gray-100 p-2 rounded-lg transition duration-200">
-                            <input type="checkbox" id="chk_diabetes" class="mt-0.5 flex-shrink-0" onchange="uncheckNone()">
-                            <span class="ml-3 text-[17px] text-gray-700">ผู้ป่วยเบาหวาน มีความเสี่ยงน้ำตาลสูง/ต่ำ (Diabetes Hyper/Hypo risk)</span>
+                        <label class="flex items-start cursor-pointer hover:bg-gray-200 p-2 rounded-lg transition duration-200">
+                            <input type="checkbox" id="chk_malnutrition" class="mt-0.5 flex-shrink-0 w-5 h-5 condition-chk" onchange="uncheckNone()">
+                            <span class="ml-3 text-[17px] text-gray-800">ผู้เสี่ยงขาดสารอาหาร</span>
                         </label>
-                        <label class="flex items-start cursor-pointer hover:bg-gray-100 p-2 rounded-lg transition duration-200">
-                            <input type="checkbox" id="chk_dkd_non" class="mt-0.5 flex-shrink-0" onchange="toggleKidney('non')">
-                            <span class="ml-3 text-[17px] text-gray-700">ผู้ป่วยโรคไต - <span class="text-orange-600 font-medium">ยังไม่ฟอกไต</span> (DKD Non-dialysis)</span>
+                        <label class="flex items-start cursor-pointer hover:bg-gray-200 p-2 rounded-lg transition duration-200">
+                            <input type="checkbox" id="chk_surgery" class="mt-0.5 flex-shrink-0 w-5 h-5 condition-chk" onchange="uncheckNone()">
+                            <span class="ml-3 text-[17px] text-gray-800">ผู้ป่วยผ่าตัด (Surgery)</span>
                         </label>
-                        <label class="flex items-start cursor-pointer hover:bg-gray-100 p-2 rounded-lg transition duration-200">
-                            <input type="checkbox" id="chk_dkd_dialysis" class="mt-0.5 flex-shrink-0" onchange="toggleKidney('dialysis')">
-                            <span class="ml-3 text-[17px] text-gray-700">ผู้ป่วยโรคไต - <span class="text-red-600 font-medium">ฟอกไตแล้ว</span> (DKD Dialysis)</span>
+                        <label class="flex items-start cursor-pointer hover:bg-gray-200 p-2 rounded-lg transition duration-200">
+                            <input type="checkbox" id="chk_cancer" class="mt-0.5 flex-shrink-0 w-5 h-5 condition-chk" onchange="uncheckNone()">
+                            <span class="ml-3 text-[17px] text-gray-800">ผู้ป่วยโรคมะเร็ง (Cancer)</span>
                         </label>
+                        <label class="flex items-start cursor-pointer hover:bg-gray-200 p-2 rounded-lg transition duration-200">
+                            <input type="checkbox" id="chk_cirrhosis" class="mt-0.5 flex-shrink-0 w-5 h-5 condition-chk" onchange="uncheckNone()">
+                            <span class="ml-3 text-[17px] text-gray-800">ผู้ป่วยโรคตับแข็ง (Cirrhosis) </span>
+                        </label>
+                        <label class="flex items-start cursor-pointer hover:bg-gray-200 p-2 rounded-lg transition duration-200">
+                            <input type="checkbox" id="chk_diabetes" class="mt-0.5 flex-shrink-0 w-5 h-5 condition-chk" onchange="uncheckNone()">
+                            <span class="ml-3 text-[17px] text-gray-800">ผู้ป่วยโรคเบาหวาน (Diabetes / Hyper/Hypoglycemia risk)</span>
+                        </label>
+
+                        <div class="bg-gray-200 p-3 rounded-lg mt-2">
+                            <p class="text-sm font-semibold text-gray-700 mb-2">กลุ่มโรคไต (เลือกได้ 1 ระยะ)</p>
+                            <label class="flex items-start cursor-pointer hover:bg-gray-300 p-2 rounded-lg transition duration-200">
+                                <input type="checkbox" id="chk_dkd_early" class="mt-0.5 flex-shrink-0 w-5 h-5 condition-chk" onchange="toggleKidney('early')">
+                                <span class="ml-3 text-[17px] text-gray-800">โรคไตเรื้อรัง - <span class="text-green-700 font-bold">ระยะเริ่มต้น</span> (CKD 1-2)</span>
+                            </label>
+                            <label class="flex items-start cursor-pointer hover:bg-gray-300 p-2 rounded-lg transition duration-200">
+                                <input type="checkbox" id="chk_dkd_non" class="mt-0.5 flex-shrink-0 w-5 h-5 condition-chk" onchange="toggleKidney('non')">
+                                <span class="ml-3 text-[17px] text-gray-800">โรคไตเรื้อรัง - <span class="text-orange-600 font-bold">ยังไม่ฟอกไต</span> (CKD 3-5)</span>
+                            </label>
+                            <label class="flex items-start cursor-pointer hover:bg-gray-300 p-2 rounded-lg transition duration-200">
+                                <input type="checkbox" id="chk_dkd_dialysis" class="mt-0.5 flex-shrink-0 w-5 h-5 condition-chk" onchange="toggleKidney('dialysis')">
+                                <span class="ml-3 text-[17px] text-gray-800">โรคไตเรื้อรัง - <span class="text-red-600 font-bold">ฟอกไตแล้ว</span> (Dialysis / CKD 5D)</span>
+                            </label>
+                        </div>
                     </div>
                 </div>
 
@@ -189,7 +213,7 @@
                 </div>
             </div>
 
-            <div id="result-section" class="bg-blue-50 p-6 md:p-8 border-t-4 border-primary print-area">
+            <div id="result-section" class="bg-blue-50 p-6 md:p-8 border-t-4 border-primary print-area hidden">
                 <div class="text-center mb-6">
                     <h2 class="text-2xl font-bold text-gray-800">ผลการประเมินของคุณ</h2>
                 </div>
@@ -204,7 +228,7 @@
                     </div>
 
                     <div class="bg-white rounded-xl shadow-sm border border-orange-200 p-5 text-center print-border">
-                        <p class="text-[17px] text-gray-600 font-medium mb-1">พลังงานเป้าหมาย</p>
+                        <p class="text-[17px] text-gray-600 font-medium mb-1">⚡ พลังงานเป้าหมาย</p>
                         <div class="text-orange-500 font-bold">
                             <span id="res-calories" class="text-3xl md:text-4xl">0</span>
                             <span class="text-[16px] ml-1 text-gray-600 font-normal block sm:inline">kcal/วัน</span>
@@ -212,7 +236,7 @@
                     </div>
 
                     <div class="bg-white rounded-xl shadow-sm border border-green-200 p-5 text-center print-border">
-                        <p class="text-[17px] text-gray-600 font-medium mb-1">🥩 โปรตีน</p>
+                        <p class="text-[17px] text-gray-600 font-medium mb-1">🥩 โปรตีนที่แนะนำ</p>
                         <div class="text-secondary font-bold mb-1">
                             <span id="res-protein" class="text-3xl md:text-4xl">0 - 0</span>
                             <span class="text-[16px] ml-1 text-gray-600 font-normal block sm:inline">กรัม/วัน</span>
@@ -221,12 +245,12 @@
                 </div>
 
                 <div class="bg-white p-5 rounded-xl border border-gray-300 shadow-sm mb-6 text-gray-800 text-[14px] leading-relaxed print-border">
-                    <p class="font-bold text-[16px] border-b pb-2 mb-3">แหล่งอ้างอิงการคำนวณโปรตีนของคุณ</p>
-                    <div id="res-protein-detail" class="space-y-2"></div>
+                    <p class="font-bold text-[16px] border-b pb-2 mb-3 text-primary">แหล่งอ้างอิงและเกณฑ์การคำนวณสำหรับคุณ</p>
+                    <ul id="res-protein-detail" class="space-y-3 list-disc pl-5"></ul>
                 </div>
 
-                <div class="bg-gray-100 p-4 rounded-lg text-[13px] text-gray-600 border border-gray-200 text-center print-border">
-                    <p class="font-semibold">* ข้อมูลนี้เพื่อการส่งเสริมสุขภาพเบื้องต้น หากมีโรคประจำตัวซับซ้อนโปรดปรึกษาแพทย์หรือนักกำหนดอาหาร</p>
+                <div class="bg-red-50 p-4 rounded-lg text-[13px] text-red-700 border border-red-200 text-center print-border font-medium">
+                    <p>* ข้อมูลนี้เพื่อการส่งเสริมสุขภาพและโภชนาการเบื้องต้น การนำไปใช้จริงควรอยู่ภายใต้การดูแลของแพทย์ผู้รักษาหรือนักกำหนดอาหาร โดยเฉพาะผู้ที่มีโรคร่วมหลายโรค</p>
                 </div>
 
                 <div class="mt-6 flex justify-center no-print">
@@ -239,6 +263,7 @@
                 </div>
             </div>
         </div>
+    </div>
 
         <div id="tab-2" class="tab-content">
             <div class="p-5 md:p-8 space-y-8">
@@ -802,189 +827,222 @@
             document.getElementById(`${productId}-res-protein`).innerText = receivedProtein.toFixed(1);
         }
 
-        // === ฟังก์ชันสำหรับแท็บ 1: ฟอร์มและการคำนวณหลัก ===
-        function resetForm() {
-            document.getElementById('gender').value = 'male';
-            document.getElementById('age').value = '';
-            document.getElementById('weight').value = '';
-            document.getElementById('height').value = '';
-            document.getElementById('activity').value = '1.2';
-            document.getElementById('goal').value = '0';
-            
-            document.getElementById('chk_none').checked = true;
-            toggleNone();
-            
-            document.getElementById('result-section').style.display = 'none';
-            document.getElementById('tab3-protein-summary').classList.add('hidden');
-            document.getElementById('tab3-target-protein').innerText = '0 - 0';
+// ==========================================
+// ฟังก์ชันสำหรับแท็บ 1: ฟอร์มและการคำนวณหลัก
+// ==========================================
+function resetForm() {
+    // รีเซ็ตค่า Input
+    const inputs = ['gender', 'age', 'weight', 'height', 'activity', 'goal'];
+    inputs.forEach(id => {
+        const el = document.getElementById(id);
+        if(el) {
+            if(id === 'gender') el.value = 'male';
+            else if(id === 'activity') el.value = '1.2';
+            else if(id === 'goal') el.value = '0';
+            else el.value = '';
+        }
+    });
+    
+    // รีเซ็ต Checkbox
+    const chkNone = document.getElementById('chk_none');
+    if(chkNone) {
+        chkNone.checked = true;
+        toggleNone();
+    }
+    
+    // ซ่อนผลลัพธ์
+    const resultSection = document.getElementById('result-section');
+    if(resultSection) resultSection.style.display = 'none';
+    
+    const tab3ProteinSummary = document.getElementById('tab3-protein-summary');
+    if(tab3ProteinSummary) tab3ProteinSummary.classList.add('hidden');
+    
+    const tab3TargetProtein = document.getElementById('tab3-target-protein');
+    if(tab3TargetProtein) tab3TargetProtein.innerText = '0 - 0';
+}
+
+function toggleNone() {
+    const chkNone = document.getElementById('chk_none');
+    if (chkNone && chkNone.checked) {
+        const checkboxesToUncheck = ['chk_pregnant', 'chk_breastfeeding', 'chk_diabetes', 'chk_dkd_non', 'chk_dkd_dialysis'];
+        checkboxesToUncheck.forEach(id => {
+            const el = document.getElementById(id);
+            if(el) el.checked = false;
+        });
+    }
+}
+
+function uncheckNone() {
+    const chkNone = document.getElementById('chk_none');
+    if(chkNone) chkNone.checked = false;
+}
+
+function toggleKidney(type) {
+    uncheckNone(); 
+    const chkNon = document.getElementById('chk_dkd_non');
+    const chkDialysis = document.getElementById('chk_dkd_dialysis');
+    
+    if(!chkNon || !chkDialysis) return;
+
+    if (type === 'non' && chkNon.checked) {
+        chkDialysis.checked = false;
+    } else if (type === 'dialysis' && chkDialysis.checked) {
+        chkNon.checked = false;
+    }
+}
+
+function calculate() {
+    try {
+        const gender = document.getElementById('gender').value;
+        const ageText = document.getElementById('age').value.trim();
+        const weightText = document.getElementById('weight').value.trim();
+        const heightText = document.getElementById('height').value.trim();
+        const activityText = document.getElementById('activity').value;
+        const goalText = document.getElementById('goal').value;
+
+        if (!ageText || !weightText || !heightText) {
+            alert("กรุณากรอกข้อมูล อายุ น้ำหนัก และส่วนสูงให้ครบถ้วนก่อนคำนวณครับ");
+            return;
         }
 
-        function toggleNone() {
-            if (document.getElementById('chk_none').checked) {
-                document.getElementById('chk_pregnant').checked = false;
-                document.getElementById('chk_breastfeeding').checked = false;
-                document.getElementById('chk_diabetes').checked = false;
-                document.getElementById('chk_dkd_non').checked = false;
-                document.getElementById('chk_dkd_dialysis').checked = false;
-            }
+        const age = parseFloat(ageText);
+        const weight = parseFloat(weightText);
+        const height = parseFloat(heightText);
+        const activity = parseFloat(activityText);
+        const goal = parseInt(goalText);
+
+        const isPregnant = document.getElementById('chk_pregnant')?.checked || false;
+        const isBreastfeeding = document.getElementById('chk_breastfeeding')?.checked || false;
+        const isDiabetes = document.getElementById('chk_diabetes')?.checked || false;
+        const isDkdNon = document.getElementById('chk_dkd_non')?.checked || false;
+        const isDkdDialysis = document.getElementById('chk_dkd_dialysis')?.checked || false;
+
+        // 1. คำนวณ BMI
+        const bmi = weight / Math.pow(height / 100, 2);
+        let bmiCategory = "";
+        let bmiColor = "";
+        
+        if (bmi < 18.5) { 
+            bmiCategory = "น้ำหนักน้อย / ผอม"; bmiColor = "text-blue-500"; 
+        } else if (bmi < 23) { 
+            bmiCategory = "น้ำหนักปกติ / สุขภาพดี"; bmiColor = "text-green-600"; 
+        } else if (bmi < 25) { 
+            bmiCategory = "ท้วม / น้ำหนักเกิน"; bmiColor = "text-yellow-600"; 
+        } else if (bmi < 30) { 
+            bmiCategory = "อ้วนระดับ 1"; bmiColor = "text-orange-500"; 
+        } else { 
+            bmiCategory = "อ้วนระดับ 2 (อันตราย)"; bmiColor = "text-red-600"; 
         }
 
-        function uncheckNone() {
-            document.getElementById('chk_none').checked = false;
+        // 2. คำนวณ TDEE
+        let bmr = 0;
+        if (gender === 'male') {
+            bmr = (10 * weight) + (6.25 * height) - (5 * age) + 5;
+        } else {
+            bmr = (10 * weight) + (6.25 * height) - (5 * age) - 161;
         }
+        const tdee = bmr * activity;
+        
+        let targetCalories = Math.round(tdee + goal);
+        if (targetCalories < 1200) targetCalories = 1200; 
 
-        function toggleKidney(type) {
-            uncheckNone(); 
-            const chkNon = document.getElementById('chk_dkd_non');
-            const chkDialysis = document.getElementById('chk_dkd_dialysis');
-            if (type === 'non' && chkNon.checked) {
-                chkDialysis.checked = false;
-            } else if (type === 'dialysis' && chkDialysis.checked) {
-                chkNon.checked = false;
-            }
-        }
+        // 3. คำนวณโปรตีน
+        let minProtein = 0;
+        let maxProtein = 0;
+        let htmlOutput = "";
 
-        function calculate() {
-            try {
-                const gender = document.getElementById('gender').value;
-                const ageText = document.getElementById('age').value.trim();
-                const weightText = document.getElementById('weight').value.trim();
-                const heightText = document.getElementById('height').value.trim();
-                const activityText = document.getElementById('activity').value;
-                const goalText = document.getElementById('goal').value;
+        if (isDkdDialysis) {
+            minProtein = weight * 1.0;
+            maxProtein = weight * 1.2;
+            htmlOutput += `<p class="font-bold text-red-700">2. กลุ่มผู้ป่วยโรคเบาหวานชนิดที่ 2 และโรคไตเรื้อรัง (Diabetic Kidney Disease - DKD)</p>`;
+            htmlOutput += `<p class="text-gray-800 font-medium">• ผู้ป่วยโรคไตเรื้อรังจากเบาหวาน ที่ต้องรับการฟอกไต (Dialysis-dependent CKD):</p>`;
+            htmlOutput += `<p class="ml-4 text-secondary font-medium">• แนะนำให้เพิ่มปริมาณโปรตีนเป็น 1.0 - 1.2 กรัม / น้ำหนักตัว 1 กก. / วัน เพื่อชดเชยโปรตีนที่สูญเสียไประหว่างการฟอกไต</p>`;
+        } else if (isDkdNon) {
+            minProtein = weight * 0.6;
+            maxProtein = weight * 0.8;
+            htmlOutput += `<p class="font-bold text-red-700">2. กลุ่มผู้ป่วยโรคเบาหวานชนิดที่ 2 และโรคไตเรื้อรัง (Diabetic Kidney Disease - DKD)</p>`;
+            htmlOutput += `<p class="text-gray-800 font-medium">• ผู้ป่วยโรคไตเรื้อรังจากเบาหวาน ระยะที่ยังไม่ฟอกไต (Nondialysis-dependent CKD / CKD 3-5):</p>`;
+            htmlOutput += `<p class="ml-4 text-secondary font-medium">• แนวทางส่วนใหญ่แนะนำให้จำกัดโปรตีนสูงสุดที่ 0.8 กรัม / น้ำหนักตัว 1 กก. / วัน (แนวทาง KDOQI แนะนำ 0.6 - 0.8 กรัม)</p>`;
+        } else {
+            let minPercent = 0;
+            let maxPercent = 0;
+            let adjustedAge = age < 2 ? 2 : age;
 
-                if (!ageText || !weightText || !heightText) {
-                    alert("กรุณากรอกข้อมูล อายุ น้ำหนัก และส่วนสูงให้ครบถ้วนก่อนคำนวณครับ");
-                    return;
-                }
+            htmlOutput += `<p class="font-bold text-blue-700">1. กลุ่มบุคคลทั่วไป (สุขภาพดี)</p>`;
+            htmlOutput += `<p class="text-gray-700 text-[13px] mb-2">คำนวณจากสัดส่วนพลังงาน (AMDR) คิดเป็นเปอร์เซ็นต์ของแคลอรี่รวมต่อวัน</p>`;
 
-                const age = parseFloat(ageText);
-                const weight = parseFloat(weightText);
-                const height = parseFloat(heightText);
-                const activity = parseFloat(activityText);
-                const goal = parseInt(goalText);
-
-                const isPregnant = document.getElementById('chk_pregnant').checked;
-                const isBreastfeeding = document.getElementById('chk_breastfeeding').checked;
-                const isDiabetes = document.getElementById('chk_diabetes').checked;
-                const isDkdNon = document.getElementById('chk_dkd_non').checked;
-                const isDkdDialysis = document.getElementById('chk_dkd_dialysis').checked;
-
-                // 1. คำนวณ BMI
-                const bmi = weight / Math.pow(height / 100, 2);
-                let bmiCategory = "";
-                let bmiColor = "";
-                
-                if (bmi < 18.5) { 
-                    bmiCategory = "น้ำหนักน้อย / ผอม"; bmiColor = "text-blue-500"; 
-                } else if (bmi < 23) { 
-                    bmiCategory = "น้ำหนักปกติ / สุขภาพดี"; bmiColor = "text-green-600"; 
-                } else if (bmi < 25) { 
-                    bmiCategory = "ท้วม / น้ำหนักเกิน"; bmiColor = "text-yellow-600"; 
-                } else if (bmi < 30) { 
-                    bmiCategory = "อ้วนระดับ 1"; bmiColor = "text-orange-500"; 
-                } else { 
-                    bmiCategory = "อ้วนระดับ 2 (อันตราย)"; bmiColor = "text-red-600"; 
-                }
-
-                // 2. คำนวณ TDEE
-                let bmr = 0;
-                if (gender === 'male') {
-                    bmr = (10 * weight) + (6.25 * height) - (5 * age) + 5;
+            if (isPregnant || isBreastfeeding) {
+                htmlOutput += `<p class="text-gray-800 font-medium">• สตรีมีครรภ์และให้นมบุตร:</p>`;
+                if (adjustedAge >= 14 && adjustedAge <= 18) {
+                    minPercent = 0.10; maxPercent = 0.30;
+                    htmlOutput += `<p class="ml-4 text-secondary font-medium">• อายุ 14-18 ปี: 10 - 30% ของพลังงานรวมต่อวัน</p>`;
                 } else {
-                    bmr = (10 * weight) + (6.25 * height) - (5 * age) - 161;
+                    minPercent = 0.10; maxPercent = 0.35;
+                    htmlOutput += `<p class="ml-4 text-secondary font-medium">• อายุ 19-50 ปี: 10 - 35% ของพลังงานรวมต่อวัน</p>`;
                 }
-                const tdee = bmr * activity;
-                
-                let targetCalories = Math.round(tdee + goal);
-                if (targetCalories < 1200) targetCalories = 1200; 
-
-                // 3. คำนวณโปรตีน
-                let minProtein = 0;
-                let maxProtein = 0;
-                let htmlOutput = "";
-
-                if (isDkdDialysis) {
-                    minProtein = weight * 1.0;
-                    maxProtein = weight * 1.2;
-                    htmlOutput += `<p class="font-bold text-red-700">2. กลุ่มผู้ป่วยโรคเบาหวานชนิดที่ 2 และโรคไตเรื้อรัง (Diabetic Kidney Disease - DKD)</p>`;
-                    htmlOutput += `<p class="text-gray-800 font-medium">• ผู้ป่วยโรคไตเรื้อรังจากเบาหวาน ที่ต้องรับการฟอกไต (Dialysis-dependent CKD):</p>`;
-                    htmlOutput += `<p class="ml-4 text-secondary font-medium">• แนะนำให้เพิ่มปริมาณโปรตีนเป็น 1.0 - 1.2 กรัม / น้ำหนักตัว 1 กก. / วัน เพื่อชดเชยโปรตีนที่สูญเสียไประหว่างการฟอกไต</p>`;
-                } else if (isDkdNon) {
-                    minProtein = weight * 0.6;
-                    maxProtein = weight * 0.8;
-                    htmlOutput += `<p class="font-bold text-red-700">2. กลุ่มผู้ป่วยโรคเบาหวานชนิดที่ 2 และโรคไตเรื้อรัง (Diabetic Kidney Disease - DKD)</p>`;
-                    htmlOutput += `<p class="text-gray-800 font-medium">• ผู้ป่วยโรคไตเรื้อรังจากเบาหวาน ระยะที่ยังไม่ฟอกไต (Nondialysis-dependent CKD / CKD 3-5):</p>`;
-                    htmlOutput += `<p class="ml-4 text-secondary font-medium">• แนวทางส่วนใหญ่แนะนำให้จำกัดโปรตีนสูงสุดที่ 0.8 กรัม / น้ำหนักตัว 1 กก. / วัน (แนวทาง KDOQI แนะนำ 0.6 - 0.8 กรัม)</p>`;
+            } else {
+                if (adjustedAge >= 2 && adjustedAge <= 3) {
+                    minPercent = 0.05; maxPercent = 0.20;
+                    htmlOutput += `<p class="text-secondary font-medium">• เด็กอายุ 2-3 ปี: 5 - 20% ของพลังงานรวมต่อวัน</p>`;
+                } else if (adjustedAge >= 4 && adjustedAge <= 18) {
+                    minPercent = 0.10; maxPercent = 0.30;
+                    htmlOutput += `<p class="text-secondary font-medium">• เด็กและวัยรุ่น อายุ 4-18 ปี: 10 - 30% ของพลังงานรวมต่อวัน</p>`;
                 } else {
-                    let minPercent = 0;
-                    let maxPercent = 0;
-                    let adjustedAge = age < 2 ? 2 : age;
-
-                    htmlOutput += `<p class="font-bold text-blue-700">1. กลุ่มบุคคลทั่วไป (สุขภาพดี)</p>`;
-                    htmlOutput += `<p class="text-gray-700 text-[13px] mb-2">คำนวณจากสัดส่วนพลังงาน (AMDR) คิดเป็นเปอร์เซ็นต์ของแคลอรี่รวมต่อวัน</p>`;
-
-                    if (isPregnant || isBreastfeeding) {
-                        htmlOutput += `<p class="text-gray-800 font-medium">• สตรีมีครรภ์และให้นมบุตร:</p>`;
-                        if (adjustedAge >= 14 && adjustedAge <= 18) {
-                            minPercent = 0.10; maxPercent = 0.30;
-                            htmlOutput += `<p class="ml-4 text-secondary font-medium">• อายุ 14-18 ปี: 10 - 30% ของพลังงานรวมต่อวัน</p>`;
-                        } else {
-                            minPercent = 0.10; maxPercent = 0.35;
-                            htmlOutput += `<p class="ml-4 text-secondary font-medium">• อายุ 19-50 ปี: 10 - 35% ของพลังงานรวมต่อวัน</p>`;
-                        }
-                    } else {
-                        if (adjustedAge >= 2 && adjustedAge <= 3) {
-                            minPercent = 0.05; maxPercent = 0.20;
-                            htmlOutput += `<p class="text-secondary font-medium">• เด็กอายุ 2-3 ปี: 5 - 20% ของพลังงานรวมต่อวัน</p>`;
-                        } else if (adjustedAge >= 4 && adjustedAge <= 18) {
-                            minPercent = 0.10; maxPercent = 0.30;
-                            htmlOutput += `<p class="text-secondary font-medium">• เด็กและวัยรุ่น อายุ 4-18 ปี: 10 - 30% ของพลังงานรวมต่อวัน</p>`;
-                        } else {
-                            minPercent = 0.10; maxPercent = 0.35;
-                            htmlOutput += `<p class="text-secondary font-medium">• ผู้ใหญ่ (อายุ 19 ปีขึ้นไป): 10 - 35% ของพลังงานรวมต่อวัน</p>`;
-                        }
-                    }
-
-                    minProtein = (targetCalories * minPercent) / 4;
-                    maxProtein = (targetCalories * maxPercent) / 4;
-
-                    if (isDiabetes) {
-                        htmlOutput += `<hr class="my-3 border-gray-200">`;
-                        htmlOutput += `<p class="font-bold text-orange-600">2. กลุ่มผู้ป่วยโรคเบาหวานชนิดที่ 2</p>`;
-                        htmlOutput += `<p class="text-gray-800 font-medium">• ผู้ป่วยเบาหวานที่มีความเสี่ยงภาวะน้ำตาลในเลือดสูงหรือต่ำ:</p>`;
-                        htmlOutput += `<p class="ml-4 text-secondary font-medium">• แนะนำให้ได้รับโปรตีนในระดับที่สูงขึ้นเพื่อช่วยควบคุมระดับน้ำตาลในเลือด</p>`;
-                    }
+                    minPercent = 0.10; maxPercent = 0.35;
+                    htmlOutput += `<p class="text-secondary font-medium">• ผู้ใหญ่ (อายุ 19 ปีขึ้นไป): 10 - 35% ของพลังงานรวมต่อวัน</p>`;
                 }
+            }
 
-                document.getElementById('res-bmi-value').innerText = bmi.toFixed(1);
-                document.getElementById('res-bmi-text').innerText = bmiCategory;
-                document.getElementById('res-bmi-text').className = `text-[16px] font-medium mt-1 ${bmiColor}`;
+            minProtein = (targetCalories * minPercent) / 4;
+            maxProtein = (targetCalories * maxPercent) / 4;
 
-                document.getElementById('res-calories').innerText = targetCalories.toLocaleString('th-TH');
-                
-                const finalProteinStr = `${Math.round(minProtein)} - ${Math.round(maxProtein)}`;
-                document.getElementById('res-protein').innerText = finalProteinStr;
-                document.getElementById('res-protein-detail').innerHTML = htmlOutput;
-
-                document.getElementById('tab3-target-protein').innerText = finalProteinStr;
-                document.getElementById('tab3-protein-summary').classList.remove('hidden');
-
-                const resultSection = document.getElementById('result-section');
-                resultSection.style.display = 'block';
-                
-                setTimeout(() => {
-                    resultSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }, 100);
-
-            } catch (error) {
-                console.error("Calculation Error:", error);
-                alert("เกิดข้อผิดพลาดในการคำนวณ โปรดตรวจสอบข้อมูลอีกครั้งครับ");
+            if (isDiabetes) {
+                htmlOutput += `<hr class="my-3 border-gray-200">`;
+                htmlOutput += `<p class="font-bold text-orange-600">2. กลุ่มผู้ป่วยโรคเบาหวานชนิดที่ 2</p>`;
+                htmlOutput += `<p class="text-gray-800 font-medium">• ผู้ป่วยเบาหวานที่มีความเสี่ยงภาวะน้ำตาลในเลือดสูงหรือต่ำ:</p>`;
+                htmlOutput += `<p class="ml-4 text-secondary font-medium">• แนะนำให้ได้รับโปรตีนในระดับที่สูงขึ้นเพื่อช่วยควบคุมระดับน้ำตาลในเลือด</p>`;
             }
         }
 
-        // ตั้งค่าหน่วยตั้งต้นเมื่อโหลดหน้าเว็บครั้งแรก
-        document.addEventListener('DOMContentLoaded', updateUnits);
-    </script>
-</body>
-</html>
+        // แสดงผล
+        document.getElementById('res-bmi-value').innerText = bmi.toFixed(1);
+        const bmiTextEl = document.getElementById('res-bmi-text');
+        bmiTextEl.innerText = bmiCategory;
+        bmiTextEl.className = `text-[16px] font-medium mt-1 ${bmiColor}`;
+
+        document.getElementById('res-calories').innerText = targetCalories.toLocaleString('th-TH');
+        
+        const finalProteinStr = `${Math.round(minProtein)} - ${Math.round(maxProtein)}`;
+        document.getElementById('res-protein').innerText = finalProteinStr;
+        document.getElementById('res-protein-detail').innerHTML = htmlOutput;
+
+        // อัปเดตข้อมูลไปยังแท็บ 3 (ถ้ามี HTML Element อยู่)
+        const tab3TargetEl = document.getElementById('tab3-target-protein');
+        if(tab3TargetEl) tab3TargetEl.innerText = finalProteinStr;
+        
+        const tab3SummaryEl = document.getElementById('tab3-protein-summary');
+        if(tab3SummaryEl) tab3SummaryEl.classList.remove('hidden');
+
+        // แสดง section ผลลัพธ์และเลื่อนลง
+        const resultSection = document.getElementById('result-section');
+        if(resultSection) {
+            resultSection.style.display = 'block';
+            setTimeout(() => {
+                resultSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
+        }
+
+    } catch (error) {
+        console.error("Calculation Error:", error);
+        alert("เกิดข้อผิดพลาดในการคำนวณ โปรดตรวจสอบข้อมูลอีกครั้งครับ");
+    }
+}
+
+// ==========================================
+// Event Listeners (เมื่อโหลดหน้าเว็บ)
+// ==========================================
+document.addEventListener('DOMContentLoaded', () => {
+    updateUnits();
+    
+    // ผูก event เพิ่มเติมได้ที่นี่ถ้าต้องการแบบไม่ใช้ onclick ใน HTML
+});
