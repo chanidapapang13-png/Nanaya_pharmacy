@@ -951,56 +951,122 @@ function calculate() {
         let maxProtein = 0;
         let htmlOutput = "";
 
-        if (isDkdDialysis) {
-            minProtein = weight * 1.0;
-            maxProtein = weight * 1.2;
-            htmlOutput += `<p class="font-bold text-red-700">2. กลุ่มผู้ป่วยโรคเบาหวานชนิดที่ 2 และโรคไตเรื้อรัง (Diabetic Kidney Disease - DKD)</p>`;
-            htmlOutput += `<p class="text-gray-800 font-medium">• ผู้ป่วยโรคไตเรื้อรังจากเบาหวาน ที่ต้องรับการฟอกไต (Dialysis-dependent CKD):</p>`;
-            htmlOutput += `<p class="ml-4 text-secondary font-medium">• แนะนำให้เพิ่มปริมาณโปรตีนเป็น 1.0 - 1.2 กรัม / น้ำหนักตัว 1 กก. / วัน เพื่อชดเชยโปรตีนที่สูญเสียไประหว่างการฟอกไต</p>`;
-        } else if (isDkdNon) {
-            minProtein = weight * 0.6;
-            maxProtein = weight * 0.8;
-            htmlOutput += `<p class="font-bold text-red-700">2. กลุ่มผู้ป่วยโรคเบาหวานชนิดที่ 2 และโรคไตเรื้อรัง (Diabetic Kidney Disease - DKD)</p>`;
-            htmlOutput += `<p class="text-gray-800 font-medium">• ผู้ป่วยโรคไตเรื้อรังจากเบาหวาน ระยะที่ยังไม่ฟอกไต (Nondialysis-dependent CKD / CKD 3-5):</p>`;
-            htmlOutput += `<p class="ml-4 text-secondary font-medium">• แนวทางส่วนใหญ่แนะนำให้จำกัดโปรตีนสูงสุดที่ 0.8 กรัม / น้ำหนักตัว 1 กก. / วัน (แนวทาง KDOQI แนะนำ 0.6 - 0.8 กรัม)</p>`;
-        } else {
-            let minPercent = 0;
-            let maxPercent = 0;
-            let adjustedAge = age < 2 ? 2 : age;
-
-            htmlOutput += `<p class="font-bold text-blue-700">1. กลุ่มบุคคลทั่วไป (สุขภาพดี)</p>`;
-            htmlOutput += `<p class="text-gray-700 text-[13px] mb-2">คำนวณจากสัดส่วนพลังงาน (AMDR) คิดเป็นเปอร์เซ็นต์ของแคลอรี่รวมต่อวัน</p>`;
-
-            if (isPregnant || isBreastfeeding) {
-                htmlOutput += `<p class="text-gray-800 font-medium">• สตรีมีครรภ์และให้นมบุตร:</p>`;
-                if (adjustedAge >= 14 && adjustedAge <= 18) {
-                    minPercent = 0.10; maxPercent = 0.30;
-                    htmlOutput += `<p class="ml-4 text-secondary font-medium">• อายุ 14-18 ปี: 10 - 30% ของพลังงานรวมต่อวัน</p>`;
+            const isCirrhosis = document.getElementById('chk_cirrhosis').checked;
+            const isDKDNon = document.getElementById('chk_dkd_non').checked;
+            
+            // 1. Calculate Calories (TDEE)
+            if (isCirrhosis) {
+                // พลังงานสำหรับตับแข็งอิงตาม BMI
+                let kcalPerKg = 0;
+                if (bmi >= 30 && bmi <= 40) kcalPerKg = 30; // 25-35 (ใช้ค่ากลาง 30)
+                else if (bmi > 40) kcalPerKg = 22.5; // 20-25 (ใช้ค่ากลาง 22.5)
+                else kcalPerKg = 32.5; // 30-35 (ใช้ค่ากลาง 32.5)
+                
+                tdee = weight * kcalPerKg; 
+            } else {
+                // สูตรพื้นฐาน Mifflin-St Jeor
+                let bmr = 0;
+                if (gender === 'male') {
+                    bmr = (10 * weight) + (6.25 * height) - (5 * age) + 5;
                 } else {
-                    minPercent = 0.10; maxPercent = 0.35;
-                    htmlOutput += `<p class="ml-4 text-secondary font-medium">• อายุ 19-50 ปี: 10 - 35% ของพลังงานรวมต่อวัน</p>`;
+                    bmr = (10 * weight) + (6.25 * height) - (5 * age) - 161;
+                }
+                tdee = (bmr * activity) + goal;
+            }
+
+            // 2. Determine Protein & References
+            let references = [];
+            
+            if (document.getElementById('chk_none').checked) {
+                if (age <= 18) {
+                    protMin = 1.0; protMax = 1.5;
+                    references.push("<b>บุคคลทั่วไป (เด็กและวัยรุ่น):</b> แนะนำที่ 10-30% ของพลังงานรวม <br><span class='text-gray-500 text-xs'>(อ้างอิง: U.S. Dept of Agriculture. Dietary Guidelines 2020-2025)</span>");
+                } else if (age >= 65) {
+                    protMin = 1.0; protMax = 1.2;
+                    references.push("<b>ผู้สูงอายุสุขภาพดี (>65 ปี):</b> แนะนำโปรตีน 1.0-1.2 กรัม/กก./วัน เพื่อรักษามวลกล้ามเนื้อและป้องกันการเสื่อมถอย <br><span class='text-gray-500 text-xs'>(อ้างอิง: Heo S, Yang SJ. Korean J Community Nutr. 2025)</span>");
+                } else {
+                    protMin = 0.8; protMax = 1.0;
+                    references.push("<b>บุคคลทั่วไป (วัยผู้ใหญ่):</b> แนะนำโปรตีน 0.8-1.0 กรัม/กก./วัน (หรือ 10-35% ของพลังงานรวม) <br><span class='text-gray-500 text-xs'>(อ้างอิง: U.S. Dept of Agriculture. Dietary Guidelines 2020-2025)</span>");
                 }
             } else {
-                if (adjustedAge >= 2 && adjustedAge <= 3) {
-                    minPercent = 0.05; maxPercent = 0.20;
-                    htmlOutput += `<p class="text-secondary font-medium">• เด็กอายุ 2-3 ปี: 5 - 20% ของพลังงานรวมต่อวัน</p>`;
-                } else if (adjustedAge >= 4 && adjustedAge <= 18) {
-                    minPercent = 0.10; maxPercent = 0.30;
-                    htmlOutput += `<p class="text-secondary font-medium">• เด็กและวัยรุ่น อายุ 4-18 ปี: 10 - 30% ของพลังงานรวมต่อวัน</p>`;
+                let minArr = []; let maxArr = [];
+
+                if (document.getElementById('chk_pregnant').checked) {
+                    minArr.push(1.1); maxArr.push(1.5);
+                    references.push("<b>ผู้ตั้งครรภ์:</b> แนะนำที่ 10-35% ของพลังงานรวมต่อวัน เพื่อเสริมสร้างการเจริญเติบโตของทารก <br><span class='text-gray-500 text-xs'>(อ้างอิง: U.S. Dept of Agriculture. Dietary Guidelines 2020-2025)</span>");
+                }
+                if (document.getElementById('chk_sarcopenia').checked) {
+                    minArr.push(1.2); maxArr.push(1.5);
+                    references.push("<b>ภาวะกล้ามเนื้อลีบหรือร่างกายอ่อนแอ (Sarcopenia/Frailty):</b> แนะนำให้เพิ่มปริมาณโปรตีนเป็น >1.2 ไปจนถึง 1.5 กรัม/กก./วัน <br><span class='text-gray-500 text-xs'>(อ้างอิง: Heo S, Yang SJ. Korean J Community Nutr. 2025)</span>");
+                }
+                if (document.getElementById('chk_malnutrition').checked) {
+                    minArr.push(1.2); maxArr.push(1.5);
+                    references.push("<b>ผู้เสี่ยงขาดสารอาหาร:</b> ควรได้รับโปรตีน 1.2 - 1.5 กรัม/กก./วัน เพื่อฟื้นฟูร่างกายและต้านภาวะการสลายโปรตีน <br><span class='text-gray-500 text-xs'>(อ้างอิง: ESPEN guideline on clinical nutrition 2025)</span>");
+                }
+                if (document.getElementById('chk_surgery').checked) {
+                    minArr.push(1.2); maxArr.push(1.5);
+                    references.push("<b>ผู้ป่วยผ่าตัด (Surgery):</b> ควรได้รับโปรตีน 1.2 - 1.5 กรัม/กก./วัน เพื่อต้านภาวะการสลายโปรตีนในร่างกาย (Catabolism) <br><span class='text-gray-500 text-xs'>(อ้างอิง: Weimann A, et al. ESPEN guideline on clinical nutrition in surgery. Clin Nutr. 2025)</span>");
+                }
+                if (document.getElementById('chk_cancer').checked) {
+                    minArr.push(1.0); maxArr.push(1.5);
+                    references.push("<b>ผู้ป่วยโรคมะเร็ง (Cancer):</b> แนะนำให้ได้รับโปรตีนอย่างน้อย 1.0 กรัม/กก./วัน และควรเพิ่มเป้าหมายไปถึง 1.5 กรัม/กก./วัน เนื่องจากร่างกายมีความต้องการกรดอะมิโนสูงขึ้น <br><span class='text-gray-500 text-xs'>(อ้างอิง: Muscaritoli M, et al. ESPEN practical guideline. Clin Nutr. 2021)</span>");
+                }
+                if (isCirrhosis) {
+                    minArr.push(1.2); maxArr.push(1.5);
+                    references.push("<b>ผู้ป่วยโรคตับแข็ง:</b> ควรได้รับโปรตีนอย่างน้อย 1.2 - 1.5 กรัม/กก./วัน เพื่อชดเชยการสูญเสียมวลกล้ามเนื้อและป้องกันภาวะขาดสารอาหาร <br><span class='text-gray-500 text-xs'>(อ้างอิง: แนวทางเวชปฏิบัติการดูแลรักษาผู้ป่วยโรคตับแข็ง ในประเทศไทย พ.ศ. 2568 - THASL)</span>");
+                }
+                if (document.getElementById('chk_diabetes').checked) {
+                    minArr.push(0.8); maxArr.push(1.5);
+                    references.push("<b>ผู้ป่วยโรคเบาหวาน (Diabetes):</b> แนะนำ 0.8 - 1.5 กรัม/กก./วัน หากมีความเสี่ยงน้ำตาลแกว่งแนะนำระดับที่สูงขึ้นเพื่อชะลอการดูดซึมน้ำตาล <br><span class='text-gray-500 text-xs'>(อ้างอิง: ADA Standards of Care 2026 / Scoping Review DKD)</span>");
+                }
+
+                // กลุ่มโรคไต
+                if (document.getElementById('chk_dkd_early').checked) {
+                    minArr.push(0.8); maxArr.push(1.0);
+                    references.push("<b>ผู้ป่วยไตเรื้อรังระยะเริ่มต้น (CKD 1-2):</b> ไม่แนะนำให้จำกัดโปรตีนให้น้อยกว่า 0.8 กรัม/กก./วัน <br><span class='text-gray-500 text-xs'>(อ้างอิง: SEMDSA, SIGN 2017)</span>");
+                }
+                if (isDKDNon) {
+                    minArr = [0.6]; maxArr = [0.8]; // จำกัดโปรตีนสูงสุด
+                    references.push("<b>ผู้ป่วยไตเรื้อรังระยะก่อนฟอกไต (CKD 3-5):</b> จำกัดสูงสุดที่ 0.8 กรัม/กก./วัน (แนะนำที่ 0.6 - 0.8) <br><span class='text-gray-500 text-xs'>(อ้างอิง: KDOQI 2020 / ADA / KDIGO)</span>");
+                }
+                if (document.getElementById('chk_dkd_dialysis').checked) {
+                    minArr.push(1.0); maxArr.push(1.2);
+                    references.push("<b>ผู้ป่วยโรคไตระยะฟอกไต (Dialysis / CKD 5D):</b> ต้องเพิ่มปริมาณโปรตีนเป็น 1.0 - 1.2 กรัม/กก./วัน เพื่อชดเชยโปรตีนที่สูญเสียไป <br><span class='text-gray-500 text-xs'>(อ้างอิง: KDOQI 2020)</span>");
+                }
+
+                if (!isDKDNon) {
+                    protMin = Math.max(...minArr);
+                    protMax = Math.max(...maxArr);
                 } else {
-                    minPercent = 0.10; maxPercent = 0.35;
-                    htmlOutput += `<p class="text-secondary font-medium">• ผู้ใหญ่ (อายุ 19 ปีขึ้นไป): 10 - 35% ของพลังงานรวมต่อวัน</p>`;
+                    protMin = 0.6; 
+                    protMax = 0.8;
                 }
             }
 
-            minProtein = (targetCalories * minPercent) / 4;
-            maxProtein = (targetCalories * maxPercent) / 4;
+            const finalProtMin = Math.round(weight * protMin);
+            const finalProtMax = Math.round(weight * protMax);
 
-            if (isDiabetes) {
-                htmlOutput += `<hr class="my-3 border-gray-200">`;
-                htmlOutput += `<p class="font-bold text-orange-600">2. กลุ่มผู้ป่วยโรคเบาหวานชนิดที่ 2</p>`;
-                htmlOutput += `<p class="text-gray-800 font-medium">• ผู้ป่วยเบาหวานที่มีความเสี่ยงภาวะน้ำตาลในเลือดสูงหรือต่ำ:</p>`;
-                htmlOutput += `<p class="ml-4 text-secondary font-medium">• แนะนำให้ได้รับโปรตีนในระดับที่สูงขึ้นเพื่อช่วยควบคุมระดับน้ำตาลในเลือด</p>`;
+            // Update UI
+            document.getElementById('res-bmi-value').innerText = bmi.toFixed(1);
+            document.getElementById('res-bmi-value').className = `text-3xl ${bmiColor}`;
+            document.getElementById('res-bmi-text').innerText = bmiText;
+            document.getElementById('res-bmi-text').className = `text-[16px] font-medium mt-1 ${bmiColor}`;
+            
+            document.getElementById('res-calories').innerText = Math.round(tdee).toLocaleString();
+            
+            if(finalProtMin === finalProtMax) {
+                document.getElementById('res-protein').innerText = finalProtMax;
+            } else {
+                document.getElementById('res-protein').innerText = `${finalProtMin} - ${finalProtMax}`;
+            }
+
+            let refList = "";
+            references.forEach(ref => {
+                refList += `<li>${ref}</li>`;
+            });
+            
+            if (isDKDNon && references.length > 1) {
+                refList = `<div class='bg-yellow-50 p-3 rounded border border-yellow-200 text-yellow-800 text-sm mb-3 font-semibold'>⚠️ ระบบยึดเกณฑ์จำกัดโปรตีนของโรคไตเรื้อรังระยะ 3-5 (0.6-0.8 กรัม/กก./วัน) เป็นความสำคัญสูงสุด เพื่อชะลอความเสื่อมของไต</div>` + refList;
             }
         }
 
